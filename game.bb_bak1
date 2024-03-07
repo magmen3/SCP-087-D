@@ -1,17 +1,15 @@
-;----------------------------------------------------------------------------;
-
-;-------------------------   SCP - 087 - B   --------------------------------;
-
-;---------   A game based on SCP-087 and in the SCP Foundation    -----------;
-
-;----------------------------------------------------------------------------;
+;-------------------------------------------------------------;
+;--------------------   SCP - 087 - D   ----------------------;
+;---------        Modification of SCP-087-B        -----------;
+;---------   Based on SCP-087-B Extended Edition   -----------;
+;-------------------------------------------------------------;
 
 
-Graphics3D 640,480,32,2
+Graphics3D 640, 480, 32, 2
 
-Global GAME_VERSION$ = "v4.1"
+Global GAME_VERSION$ = "v0.1"
 
-AppTitle "SCP 087-B Extended Edition " + GAME_VERSION
+AppTitle "SCP 087-D " + GAME_VERSION
 
 Global ButtonSFX = LoadSound("SFX\Button.ogg")
 Dim ChosenButton(5)
@@ -24,6 +22,7 @@ Global MapString$
 MapString = ""
 
 Include "server.bb"
+Include "scancode.bb"
 
 Global SelectedInputBox = 0
 
@@ -33,17 +32,17 @@ Global MenuFont1%,MenuFont2%
 Global MouseHit1%,MouseHit2%
 Global PointerImg%
 Global launchertex%
-Global BRIGHTNESS_MAX% = 150
+Global BRIGHTNESS_MAX% = 220
 Global DO_ANIMATION% = True
-MenuFont1 = LoadFont("verdana",16)
-MenuFont2=LoadFont( "GFX\Courier.ttf",16)
+MenuFont1 = LoadFont("OCR A Becker RUS-LAT.TTF", 13)
+MenuFont2 = LoadFont("OCR A Becker RUS-LAT.TTF", 16)
 
 Global screenwidth = GetINIInt("options.ini","options","width")
 Global screenheight = GetINIInt("options.ini","options","height")
 Global colordepth = GetINIInt("options.ini","options","colordepth")
-Global fullscreen = max(GetINIInt("options.ini","opt)ons","fullscreen"),(Not Windowed3D()))
+Global fullscreen = max(GetINIInt("options.ini","options","fullscreen"), (Not Windowed3D()))
 Global InvertMouse =  GetINIInt("options.ini","options","invert mouse y")
-Global Brightness=max(min(GetINIInt("options.ini","options","brightness"),BRIGHTNESS_MAX),10)
+Global Brightness=max(min(GetINIInt("options.ini","options","brightness"), BRIGHTNESS_MAX), 10)
 Global Launcher  = GetINIInt("options.ini","options","launcher")
 Global framelimit = GetINIInt("options.ini","options","framelimit")
 Global skipintro = GetINIInt("options.ini","options","skipintro")
@@ -63,7 +62,7 @@ Color 255,255,255
 Local selectedGFXmode%
 selectedGFXmode=1
 
-For i=1 To CountGfxModes3D()
+For i = 1 To CountGfxModes3D()
 	If (GfxMode3D(i) And GfxModeDepth(i)=colordepth) Then
 		If (GfxModeWidth(i)>=screenwidth And GfxModeHeight(i)>=screenheight) Then
 			selectedGFXmode=i
@@ -72,10 +71,10 @@ For i=1 To CountGfxModes3D()
 		selectedGFXmode=i
 	EndIf
 Next
-screenwidth=GfxModeWidth(selectedGFXmode)
-screenheight=GfxModeHeight(selectedGFXmode)
-PutINIValue("options.ini","options","width",Str(screenwidth))
-PutINIValue("options.ini","options","height",Str(screenheight))
+screenwidth = GfxModeWidth(selectedGFXmode)
+screenheight = GfxModeHeight(selectedGFXmode)
+PutINIValue("options.ini", "options", "width", Str(screenwidth))
+PutINIValue("options.ini", "options", "height", Str(screenheight))
 
 launchertex =		 LoadImage("GFX\launcher.jpg")
 launchertex_a1 =	 LoadImage("GFX\launcher_a1.png")
@@ -370,8 +369,6 @@ Else
 	Graphics3D (screenwidth,screenheight,colordepth,2)
 EndIf
 
-AppTitle "SCP-087-B Extended Edition " + GAME_VERSION
-
 AntiAlias True 
 HidePointer 
 
@@ -387,10 +384,10 @@ Flip
 FreeImage tempImg
 
 Global LogoImg = LoadImage("GFX\scplogo.png")
-ScaleImage(LogoImg,GraphicsWidth() / 1280.0,GraphicsHeight() / 720.0)
+ScaleImage(LogoImg,GraphicsWidth() / 1280.0, GraphicsHeight() / 720.0)
 
-Global font1=LoadFont( "GFX\Courier.ttf",18 ) 
-Global font=LoadFont( "GFX\pretext.ttf",128 ) 
+Global font1 = LoadFont("GFX\YouMurderer BB.TTF", 24)
+Global font	 = LoadFont("GFX\YouMurderer BB.TTF", 128)
 
 Const hit_map = 1
 Const hit_map2 = 5
@@ -422,7 +419,7 @@ Global mouse_y_speed_1#,mouse_y_speed_2#,mouse_y_speed_3#,mouse_y_speed_4#,mouse
 ; -- User.
 Global user_camera_pitch#
 Global up#, side#
-Global STAMINA_MAX# = 230.0
+Global STAMINA_MAX# = 500.0
 Global Stamina# = STAMINA_MAX
 Global StaminaOverload# = 0.0
 Global StaminaTimer# = 0.0
@@ -473,8 +470,8 @@ Global camera
 camera = CreateCamera()
 CameraRange camera, 0.001, 10
 CameraFogMode camera, 1
-CameraFogRange camera, 1, 2.5
-CameraFogColor camera,0,0,0
+CameraFogRange camera, 1, 5
+CameraFogColor camera,70,70,70
 microphone=CreateListener(camera) ; Create listener, make it child of camera
 Include "dreamfilter.bb"
 Include "bumpmapping.bb"
@@ -483,7 +480,7 @@ CreateBlurImage()
 
 Global PlayerFloor, KillTimer%
 
-AmbientLight Brightness+34,Brightness+34,Brightness+34
+AmbientLight Brightness + 35,Brightness + 25,Brightness + 5 ; 34
 
 Global collider = CreatePivot()
 PositionEntity collider,-2.5,-1.3,-0.5
@@ -527,8 +524,8 @@ Next
 For i = 0 To 7
 	StepSFX(i)=Load3DSound("SFX\Player\step"+(i+1)+".ogg")
 	RunSFX(i)=Load3DSound("SFX\Player\run"+(i+1)+".ogg")
-	SoundVolume StepSFX(i),0.6
-	SoundVolume RunSFX(i),0.6
+	SoundVolume StepSFX(i), 0.6
+	SoundVolume RunSFX(i), 0.6
 Next
 For i = 0 To 2
 	RunBreathSFX(i)=LoadSound("SFX\Player\breath"+i+".ogg")
@@ -566,14 +563,14 @@ Global SpiderSFX = LoadSound("SFX\Other\spider.ogg")
 
 Global MUSIC_ON = True
 
-Dim AmbientSFX(31)
-For i = 0 To 30
-	AmbientSFX(i)=Load3DSound("SFX\Ambients\ambient"+(i+1)+".ogg")
+Dim AmbientSFX(111)
+For i = 0 To 110
+	AmbientSFX(i) = Load3DSound("SFX\Ambients\ambient"+(i+1)+".ogg")
 Next
 
 Dim RadioSFX(5)
 For i = 0 To 4
-	RadioSFX(i)=LoadSound("SFX\Radio\radio"+(i+1)+".ogg")
+	RadioSFX(i) = LoadSound("SFX\Radio\radio"+(i+1)+".ogg")
 Next
 
 Global MusicIntro = LoadSound("SFX\Music\The Beginning.ogg")
@@ -621,18 +618,24 @@ Global AmbientCaveSFX = LoadSound("SFX\Events\ambient_cave.ogg")
 
 Global mentalmesh = PlayerMesh
 Global spider
-
+; Monsters
 Global mental = LoadTexture("GFX\npc\mental.jpg")
+Global mental2 = LoadTexture("GFX\npc\mental-2.jpg")
+Global mental3 = LoadTexture("GFX\npc\mental-3.jpg")
 Global tex173 = LoadTexture("GFX\npc\173.jpg")
+Global tex1732 = LoadTexture("GFX\npc\173-2.jpg")
 Global eyekiller = LoadTexture("GFX\npc\eyekiller.jpg")
 Global clothwandertex = LoadTexture("GFX\npc\clothwander.jpg")
 Global unknownTex = LoadTexture("GFX\npc\unknown.jpg")
 
-Dim GlimpseTextures(4)
+Dim GlimpseTextures(6)
 GlimpseTextures(0)= LoadTexture("GFX\npc\glimpse1.png",1+2)
 GlimpseTextures(1)= LoadTexture("GFX\npc\glimpse2.png",1+2)
 GlimpseTextures(2)= LoadTexture("GFX\npc\glimpse3.png",1+2)
 GlimpseTextures(3)= LoadTexture("GFX\npc\glimpse4.png",1+2)
+GlimpseTextures(4)= LoadTexture("GFX\npc\glimpse5.png",1+2)
+GlimpseTextures(5)= LoadTexture("GFX\npc\glimpse6.png",1+2)
+GlimpseTextures(6)= LoadTexture("GFX\npc\glimpse7.png",1+2)
 
 Global EnemyMental.ENEMIES
 Global EnemyRedmist.ENEMIES
@@ -681,7 +684,7 @@ Global EndingSceneMod = False
 ;-------------------------------------------------------------------------------
 ;-------------------------------------------------------------------------------
 
-CameraFogRange(camera, 1, 6.3)
+CameraFogRange(camera, 1, 6.5)
 Global GameStarted = False
 Global timerlowfps = 0
 
@@ -871,7 +874,7 @@ While QUIT
 
 		If introtimer = 100 Then PlaySound(FireOn)
 		If introtimer <= 80 Then
-			If gamestarted Then fogrange# = 2.8 Else fogrange# = 6.0
+			If gamestarted Then fogrange# = 4.5 Else fogrange# = 6.5
 			templight1# = (81.0-introtimer)/80.0
 			templight2# = max(0,templight1*24.0)
 			AmbientLight (templight1#*BRIGHTNESS)+templight2#,(templight1#*BRIGHTNESS)+templight2#,(templight1#*BRIGHTNESS)+templight2#
@@ -1033,30 +1036,30 @@ While QUIT
 	
 	If FogTimer > 0 Then
 		FogTimer = FogTimer - 0.4
-		CameraFogRange(camera, 1, 2.8+FogTimer/100)
+		CameraFogRange(camera, 1, 4.2+FogTimer/100)
 	EndIf
 	
-	Local speedMultiplier# = 1.0 * SpeedLimit
+	Local speedMultiplier# = 1.5 * SpeedLimit
 	MoveShift = False
 
 	If KeyDown(42) And ((KeyDown(208)Or KeyDown(31)) Xor (KeyDown(200) Or  KeyDown(17)) Or (KeyDown(203) Or KeyDown(30)) Xor (KeyDown(205)Or KeyDown(32))) Then
 		If StaminaTimer = 0 Then
-			speedMultiplier = speedMultiplier * 1.7
+			speedMultiplier = speedMultiplier * 2.1
 			MoveShift = True
 			Stamina = Stamina - 1.0
 			crouchtimer = 0
 		EndIf
 		
 		If PlayState <> GAME_SOLO And Stamina < 0 Then
-			speedMultiplier = 1.0
+			speedMultiplier = 1.5
 			Stamina = 0
 		EndIf
 		If VisibilityTimer > 0 Then
 			If Act = ACT_WALK Then
-				speedMultiplier = 1.0
+				speedMultiplier = 1.5
 			EndIf
 			If Act = ACT_173 Or Act = ACT_FLASH_2 Or Act = ACT_BEHIND Then
-				speedMultiplier = 3.0
+				speedMultiplier = 3.5
 			EndIf
 		EndIf
 	EndIf
@@ -1078,7 +1081,7 @@ While QUIT
 			If StaminaTimer >= (370+StaminaOverload) Then StaminaTimer = 0 : StaminaOverload = max(StaminaOverload-50,0)
 			If StaminaTimer = 0 And StaminaOverload > 0 Then StaminaTimer = 1
 			If StaminaTimer = 30 Then PlaySound(RunBreathSFX(0))
-			If speedMultiplier < 0.5 Then
+			If speedMultiplier < 0.3 Then
 				speedMultiplier = 0.0
 				blurtimer = blurtimer + 0.5
 				
@@ -1100,12 +1103,12 @@ While QUIT
 		EndIf
 	Else
 		If VisibilityTimer < 0 And PlayingAs <> PLAYER_CLASSD Then
-			speedMultiplier = 2.0
+			speedMultiplier = 2.5
 		EndIf
 	EndIf
 	
 	If Act = ACT_DARKNESS And VisibilityTimer > 0 Then
-		speedMultiplier = 0.5
+		speedMultiplier = 0.7
 	EndIf
 	
 	
@@ -1140,7 +1143,7 @@ While QUIT
 		
 		If EndingSceneMod Then speedMultiplier = 0.25
 		
-		If StaminaTimer = 0 And ((Stamina < 60 And speedMultiplier > 1.0) Or Stamina < 25) Then
+		If StaminaTimer = 0 And ((Stamina < 60 And speedMultiplier > 1.5) Or Stamina < 25) Then
 			If breathtimer=0 And Rand(7)=1 Then BreathChannel = PlaySound(RunBreathSFX(Rand(1,3))) : breathtimer = 53
 		EndIf
 		
@@ -1151,7 +1154,7 @@ While QUIT
 		If shake >= 10.0 Then 
 			shake = -10.0
 			If dropspeed > -0.01 And steptimer = 0 Then
-				If speedMultiplier > 1.0 Then
+				If speedMultiplier > 1.5 Then
 					EmitSound(RunSFX(Rand(0,7)), collider)
 				Else
 					EmitSound(StepSFX(Rand(0,7)), collider)
@@ -1227,7 +1230,7 @@ While QUIT
 	If GameStarted = True And AmbientTimer = 0 Then
 		AmbientTimer = Rand(400,1000)
 		PositionEntity(SoundEmitter, EntityX(collider)+Rand(-1,1), EntityY(collider)+Rand(-1,-5), EntityZ(collider)+Rand(-1,1))
-		EmitSound(AmbientSFX(Rand(1,30)),SoundEmitter)
+		EmitSound(AmbientSFX(Rand(0,111)),SoundEmitter)
 	EndIf
 	
 	If GameStarted = True Then
@@ -1241,13 +1244,13 @@ While QUIT
 	If CollidedFloor = True Then
 	If dropspeed# < -0.11 And (	PlayState = GAME_SOLO Or PlayingAs = PLAYER_CLASSD) Then KillTimer = max(1,KillTimer)
 		If dropspeed# < -0.01 And steptimer = 0 And introtimer = 0 Then
-			If speedMultiplier > 1.0 Then
+			If speedMultiplier > 1.5 Then
 				EmitSound(RunSFX(Rand(0,7)), collider)
-				steptimer = 15
+				steptimer = 20
 			Else
 				EmitSound(StepSFX(Rand(0,7)), collider)
-				steptimer = 24
-				If speedMultiplier < 0.9 Then steptimer = 28
+				steptimer = 28
+				If speedMultiplier < 1.4 Then steptimer = 28
 			EndIf
 		EndIf
 		dropspeed# = 0		
@@ -2174,7 +2177,7 @@ Function CreateGlimpses()
 				EndX = 7.5
 			EndIf
 			
-			CreateGlimpse(Floor(Rand(StartX,EndX))+0.5, FloorY,Floor(Rand(FloorZ,FloorZ+5.0))+0.5, GlimpseTextures(Rand(0,3)))
+			CreateGlimpse(Floor(Rand(StartX,EndX))+0.5, FloorY,Floor(Rand(FloorZ,FloorZ+5.0))+0.5, GlimpseTextures(Rand(0,6)))
 		EndIf 
 	Next
 	
@@ -3005,7 +3008,7 @@ Function UpdateFloors()
 							If Floor(i/2.0)=Ceil(i/2.0) Then
 								CurrEnemy = CreateEnemy(endx, FloorY-0.5, FloorZ,mental) : CurrEnemy\speed = 0.013
 							Else
-								CurrEnemy = CreateEnemy(endx, FloorY-0.5, FloorZ,mental) : CurrEnemy\speed = 0.013
+								CurrEnemy = CreateEnemy(endx, FloorY-0.5, FloorZ,mental2) : CurrEnemy\speed = 0.013
 							EndIf
 							CurrEnemy\playerlastx# = EntityX(collider)
 							CurrEnemy\playerlastz# = EntityZ(collider)
@@ -3155,7 +3158,7 @@ Function UpdateFloors()
 							PlaySound(HorrorSFX(0))
 						EndIf
 						If FloorTimer(i) = 100 Then 
-							CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ,mental) : CurrEnemy\speed = 0.035
+							CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ,mental3) : CurrEnemy\speed = 0.035
 							CurrEnemy\dorotation = False
 							RotateEntity CurrEnemy\collider, 0,first_angle,0
 							If Distance2(EntityX(CurrEnemy\collider), EntityY(CurrEnemy\collider), EntityZ(CurrEnemy\collider)) < 2.0 Then CurrEnemy\dorotation = True
@@ -3163,11 +3166,11 @@ Function UpdateFloors()
 							CameraFogRange camera, 1, 15
 							AmbientLight Brightness,Brightness,Brightness
 						ElseIf FloorTimer(i) = 170 Or FloorTimer(i) = 300 ; valot sammuu
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 						ElseIf FloorTimer(i) = 450
 							ChannelVolume MusicChannel, 1.0
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Brightness,Brightness,Brightness
 							FreeEntity CurrEnemy\collider
 							FreeEntity CurrEnemy\obj
@@ -3206,7 +3209,7 @@ Function UpdateFloors()
 							If Floor(i/2.0)=Ceil(i/2.0) Then
 								CurrEnemy = CreateEnemy(startx-0.3, FloorY+1.2, FloorZ+6.0,mental) : CurrEnemy\speed = 0.035
 							Else
-								CurrEnemy = CreateEnemy(startx+0.3, FloorY+1.2, FloorZ-6.0,mental) : CurrEnemy\speed = 0.035
+								CurrEnemy = CreateEnemy(startx+0.3, FloorY+1.2, FloorZ-6.0,mental2) : CurrEnemy\speed = 0.035
 							EndIf
 							CurrEnemy\dorotation = False
 							RotateEntity CurrEnemy\collider, 0,first_angle,0
@@ -3215,10 +3218,10 @@ Function UpdateFloors()
 							CameraFogRange camera, 1, 15
 							AmbientLight Brightness,Brightness,Brightness
 						ElseIf FloorTimer(i) = 170 Or FloorTimer(i) = 300 ; valot sammuu
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 						ElseIf FloorTimer(i) = 450
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Brightness,Brightness,Brightness
 							FreeEntity CurrEnemy\collider
 							FreeEntity CurrEnemy\obj
@@ -3271,10 +3274,10 @@ Function UpdateFloors()
 							CameraFogRange camera, 1, 15
 							AmbientLight Brightness,Brightness,Brightness
 						ElseIf FloorTimer(i) = 170 Or FloorTimer(i) = 300 ; valot sammuu
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 						ElseIf FloorTimer(i) = 450
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Brightness,Brightness,Brightness
 							FreeEntity CurrEnemy\collider
 							FreeEntity CurrEnemy\obj
@@ -3327,10 +3330,10 @@ Function UpdateFloors()
 							CameraFogRange camera, 1, 15
 							AmbientLight Brightness,Brightness,Brightness
 						ElseIf FloorTimer(i) = 170 Or FloorTimer(i) = 300 ; valot sammuu
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 						ElseIf FloorTimer(i) = 450
-							CameraFogRange camera, 1, 2.8
+							CameraFogRange camera, 1, 5.4
 							AmbientLight Brightness,Brightness,Brightness
 							FreeEntity CurrEnemy\collider
 							FreeEntity CurrEnemy\obj
@@ -3476,7 +3479,7 @@ Function UpdateFloors()
 						FloorTimer(i) = 3
 						EmitSound(StoneSFX, btn3)
 						MoveEntity(door2, 0,1.6,0)
-						CurrEnemy = CreateEnemy(4.0, FloorY+1.0, -11.0, mental)
+						CurrEnemy = CreateEnemy(4.0, FloorY+1.0, -11.0, mental3)
 						CurrEnemy\speed = 0.013
 						PlaySound(HorrorSFX(3))
 					EndIf
@@ -3594,7 +3597,7 @@ Function UpdateFloors()
 							FloorTimer(i) = FloorTimer(i) + 1
 							PlaySound(RoarSFX)
 							
-							CurrEnemy = CreateEnemy(4.5,FloorY-0.3,-12,mental)  
+							CurrEnemy = CreateEnemy(4.5,FloorY-0.3,-12,mental2)  
 							CurrEnemy\speed = 0.00
 							CurrEnemy\dorotation = False
 							CurrEnemy\playerlastseen = True
@@ -3875,7 +3878,7 @@ Function UpdateFloors()
 						EndIf
 						If FloorTimer(i) <= 200 Then ;Init_End
 							;ChannelVolume(MusicChannel, 1.0-(FloorTimer(i)/200.0))
-							CameraFogRange(camera, 1, 2.8+(FloorTimer(i)/100.0))
+							CameraFogRange(camera, 1, 4.2+(FloorTimer(i)/100.0))
 							MUSIC_ON = False
 						EndIf
 						If FloorTimer(i) =201 Then ;Button1 click
@@ -4049,7 +4052,7 @@ Function UpdateFloors()
 								
 								CanMove = True
 								Blurtimer = 200
-								CameraFogRange(camera, 1, 2.8)
+								CameraFogRange(camera, 1, 4.2)
 								AmbientLight Brightness,Brightness,Brightness
 								LoopSound(MusicSecondArea)
 								MusicChannel = PlaySound(MusicSecondArea)
@@ -4162,7 +4165,7 @@ Function UpdateFloors()
 						
 						If FloorTimer(i) = 260 Then ;Button2 end of move
 							PositionEntity wall,0,20,0
-							PlaySound(ambientSFX(1))
+							PlaySound(AmbientSFX(Rand(0,111)))
 							FloorTimer(i) = 300
 						EndIf
 						
@@ -4239,7 +4242,7 @@ Function UpdateFloors()
 							If FloorTimer(i) < 3000 Then EndingFogRange = EndingFogRange + 0.13
 							EndingSceneMod = True
 							CameraFogRange(camera, 0.1, EndingFogRange)
-							CameraFogColor(camera, 0,0,0)
+							CameraFogColor(camera, 70,70,70)
 							Stamina = 150
 							
 							If floorTimer(i) = 2920 Then
@@ -4420,7 +4423,16 @@ Function UpdateFloors()
 				If FloorTimer(PlayerFloor)=150 Then
 					PlaySound RadioSFX(3)	;M?RK?ILY?	
 					FloorTimer(PlayerFloor)=0
+					CurrEnemy = CreateEnemy(startx-0.5, FloorY-0.5, FloorZ,unknownTex)
+					CurrEnemy\speed = 0.01
+					CurrEnemy\dorotation = true
+					RotateEntity(CurrEnemy\collider,0,180,0)
+					EntityFX(CurrEnemy\obj,8)
+					PlaySound(HorrorSFX(5))
 				ElseIf FloorTimer(PlayerFloor) > 0 Then
+					FreeEntity CurrEnemy\collider
+					FreeEntity CurrEnemy\obj
+					Delete CurrEnemy
 					FloorTimer(PlayerFloor) = FloorTimer(PlayerFloor) + 1
 				EndIf
 			Case ACT_SPIDER
@@ -4473,13 +4485,13 @@ Function UpdateFloors()
 					EndIf
 				ElseIf FloorTimer(PlayerFloor)= 2
 					If Distance2(FloorX, FloorY, FloorZ)<1.5 Then
-						CurrEnemy = CreateEnemy(FloorX, FloorY-0.5, FloorZ,mental)
+						CurrEnemy = CreateEnemy(FloorX, FloorY-0.5, FloorZ,mental2)
 						PlaySound(HorrorSFX(Rand(0,2)))
 						FloorTimer(PlayerFloor) = 5
 					EndIf
 				ElseIf FloorTimer(PlayerFloor)= 3
 					If Distance2(startX, FloorY, FloorZ)<1.5 Then
-						CurrEnemy = CreateEnemy(startX, FloorY-0.5, FloorZ,mental)
+						CurrEnemy = CreateEnemy(startX, FloorY-0.5, FloorZ,mental3)
 						PlaySound(HorrorSFX(Rand(0,2)))
 						FloorTimer(PlayerFloor) = 5
 					EndIf	
@@ -4601,7 +4613,7 @@ Function UpdateFloors()
 			Case ACT_173
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
-						EnemyRedmist = CreateEnemy(startx-1.8,FloorY-0.5,FloorZ-6.0,tex173)  
+						EnemyRedmist = CreateEnemy(startx-1.8,FloorY-0.5,FloorZ-6.0,tex1732)  
 					Else ;pariton
 						EnemyRedmist = CreateEnemy(startx+1.8,FloorY-0.5,FloorZ+6.0,tex173)  
 					EndIf
@@ -4614,7 +4626,7 @@ Function UpdateFloors()
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
 						EnemyRedmist = CreateEnemy(2.5,FloorY-0.5,-12.5,tex173)	
 					Else ;pariton
-						EnemyRedmist = CreateEnemy(5.5,FloorY-0.5,5.55,tex173)   
+						EnemyRedmist = CreateEnemy(5.5,FloorY-0.5,5.55,tex1732)   
 					EndIf
 					EntityFX EnemyRedmist\obj, 8
 					EnemyRedmist\speed = 0.0
@@ -4660,8 +4672,8 @@ Function UpdateFloors()
 				EndIf
 				
 				If FloorTimer(PlayerFloor) = 62 Then ;Button1 end of move
-					EmitSound(AmbientSFX(1), door)
-					EmitSound(AmbientSFX(9), door)
+					EmitSound(AmbientSFX(Rand(0,111)), door)
+					EmitSound(AmbientSFX(Rand(0,111)), door)
 					FloorTimer(PlayerFloor) = 100
 				EndIf
 				
@@ -4842,8 +4854,8 @@ Function UpdateFloors()
 					
 					MoveEntity(door, 0,0.007,0)
 					
-					If FloorTimer(PlayerFloor) = 180 Then EmitSound (AmbientSFX(1),door)
-					If FloorTimer(PlayerFloor) = 340 Then EmitSound (AmbientSFX(16),door)
+					If FloorTimer(PlayerFloor) = 180 Then EmitSound (AmbientSFX(Rand(0,111)),door)
+					If FloorTimer(PlayerFloor) = 340 Then EmitSound (AmbientSFX(Rand(0,111)),door)
 					
 					r = FloorTimer(PlayerFloor)/10.0
 					
@@ -4853,20 +4865,20 @@ Function UpdateFloors()
 						TurnEntity(camera, Rnd(-0.5,0.5), Rnd(-0.5,0.5), Rnd(-0.5,0.5))
 					EndIf
 					AmbientLight max(10,Brightness+24-r), max(10,Brightness+24-r), max(10,Brightness+24-r)
-					CameraFogRange(camera, 1, 2.8+((min(4.0,250.0/FloorTimer(PlayerFloor)))-1.0))
+					CameraFogRange(camera, 1, 4.2+((min(4.0,250.0/FloorTimer(PlayerFloor)))-1.0))
 					
 					FloorTimer(PlayerFloor) = FloorTimer(PlayerFloor) + 1
 				EndIf
 				If FloorTimer(PlayerFloor) >= 250 Then
-					If FloorTimer(PlayerFloor) = 410 Then EmitSound (AmbientSFX(18),door)
+					If FloorTimer(PlayerFloor) = 410 Then EmitSound (AmbientSFX(Rand(0,111)),door)
 					If FloorTimer(PlayerFloor) = 510
-						PlaySound (AmbientSFX(17))	
+						PlaySound (AmbientSFX(Rand(0,111)))	
 					EndIf		
 					If FloorTimer(PlayerFloor) = 610 Then 
-						EmitSound (AmbientSFX(2),SoundEmitter)		
+						EmitSound (AmbientSFX(Rand(0,111)),SoundEmitter)		
 					EndIf		
 					If FloorTimer(PlayerFloor) = 720
-						PlaySound (AmbientSFX(18))	
+						PlaySound (AmbientSFX(Rand(0,111)))	
 					EndIf
 					If FloorTimer(PlayerFloor) = 800 Or FloorTimer(PlayerFloor) = 840 Or FloorTimer(PlayerFloor) = 880
 						PlaySound (loudstepsound)	
@@ -4887,7 +4899,7 @@ Function UpdateFloors()
 						EndIf
 					Else ;pariton
 						If	Distance2(startx+1.5,FloorY-0.5,FloorZ+5.0)<0.25 Then
-							CurrEnemy = CreateEnemy(startx+1.5,FloorY-0.5,FloorZ+2.0,tex173)  
+							CurrEnemy = CreateEnemy(startx+1.5,FloorY-0.5,FloorZ+2.0,tex1732)  
 							CurrEnemy\speed = 0.01
 							EntityFX CurrEnemy\obj, 8
 							FloorTimer(PlayerFloor)=2
@@ -5012,7 +5024,7 @@ Function UpdateFloors()
 					ScaleEntity(CurrObject, 0.5,0.5,0.1)
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen
 						PositionEntity (CurrObject, StartX-0.5, FloorY-0.5, FloorZ-1.6)
-						CurrEnemy = CreateEnemy(StartX-0.5, FloorY-0.5, FloorZ-2,mental)
+						CurrEnemy = CreateEnemy(StartX-0.5, FloorY-0.5, FloorZ-2,mental2)
 						CurrEnemy\speed = 0.0
 					Else ;pariton
 						PositionEntity (CurrObject, StartX+0.5, FloorY-0.5, FloorZ+1.6)	
@@ -5033,7 +5045,7 @@ Function UpdateFloors()
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
 						CurrEnemy = CreateEnemy(StartX-2.5,FloorY-0.5,FloorZ-3.0,tex173)  
 					Else ;pariton
-						CurrEnemy = CreateEnemy(StartX+2.5,FloorY-0.5,FloorZ+3.0,tex173)  
+						CurrEnemy = CreateEnemy(StartX+2.5,FloorY-0.5,FloorZ+3.0,tex1732)  
 					EndIf
 					PlaySound(BehindSFX)
 					EntityFX CurrEnemy\obj, 8
@@ -5943,8 +5955,3 @@ Function Download(link$, savepath$ = "", savefile$ = "")
 			Return False
 	End Select
 End Function
-
-
-;~IDEal Editor Parameters:
-;~F#136#13A#13E#142#16E#193#1B1#1C7#1E4#2D2#30D#31B#4BF#4C6#4E0
-;~C#Blitz3D
