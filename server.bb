@@ -28,7 +28,7 @@ Dim FloorTimer(flooramount)
 
 Global isFlying% = False
 Global UpdateTimer = 0
-Global ChatLogFile
+;Global ChatLogFile
 Dim HorrorSFX(4)
 
 Global ID = 0
@@ -2079,15 +2079,15 @@ Function AddChatMsg(txt$,r%,g%,b%,player%=-1,glbal%=False,time%=15000)
 	
 	cm\SendTo[ID] = True
 	
-	;If ChatLogFile=0 Then
-	;	Local clogID%=1
-	;	While FileType("Chatlogs\chatlog"+clogID+".txt")<>0
-	;		clogID=clogID+1
+	;If ChatLogFile = 0 Then ; idk how to fix
+	;	Local clogID% = 1
+	;	While FileType("Chatlogs\chatlog" + clogID + ".txt") <> 0
+	;		clogID = clogID + 1
 	;	Wend
-	;	ChatLogFile = WriteFile("Chatlogs\chatlog"+clogID+".txt")
+	;	ChatLogFile = WriteFile("Chatlogs\chatlog" + clogID + ".txt")
 	;EndIf
 	
-	;WriteLine(ChatLogFile,cm\Txt)
+	;WriteLine(ChatLogFile, cm\Txt)
 End Function
 
 Function UpdateChatMsgs()

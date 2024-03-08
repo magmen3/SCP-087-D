@@ -9,8 +9,7 @@ Function CreateBlurImage()
 
 	ark_sw = GraphicsWidth()
 	ark_sh = GraphicsHeight()
-	
-	
+
 	;Create sprite
 	Local spr = CreateMesh(cam)
 	Local sf = CreateSurface(spr)
@@ -26,7 +25,7 @@ Function CreateBlurImage()
 	EntityOrder spr, -100000
 	EntityBlend spr, 1
 	ark_blur_image = spr
-	
+
 	;Create blur texture
 	ark_blur_texture = CreateTexture(2048, 2048, 256)
 	EntityTexture spr, ark_blur_texture
@@ -34,6 +33,5 @@ End Function
 
 Function UpdateBlur(power#)
 	EntityAlpha ark_blur_image, power#
-	CopyRect  ark_sw / 2 - 1024, ark_sh / 2 - 1024, 2048, 2048, 0, 0, BackBuffer(), TextureBuffer(ark_blur_texture)	
-	
+	CopyRect  ark_sw / 2 - 1024, ark_sh / 2 - 1024, 2048, 2048, 0, 0, BackBuffer(), TextureBuffer(ark_blur_texture)
 End Function

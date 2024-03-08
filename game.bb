@@ -7,7 +7,7 @@
 
 Graphics3D 640, 480, 32, 2
 
-Global GAME_VERSION$ = "v0.2"
+Global GAME_VERSION$ = "v0.25"
 
 AppTitle "SCP 087-D " + GAME_VERSION
 
@@ -17,6 +17,13 @@ ChosenButton(0) = 0
 ChosenButton(1) = 0
 ChosenButton(2) = 0
 ChosenButton(3) = 0
+
+; blitzcord stuff (i hope that works)
+BlitzcordSetSmallImage("icon.png")
+BlitzcordSetLargeImage("GFX/scplogo.png")
+BlitzcordSetActivityType("Game")
+BlitzcordSetActivityState("Playing")
+BlitzcordSetSmallText("SCP-087-D " + GAME_VERSION)
 
 Global MapString$
 MapString = ""
@@ -30,10 +37,12 @@ Global JoinToServer = False
 
 Global MenuFont1%,MenuFont2%
 Global MouseHit1%,MouseHit2%
-Global PointerImg%
+;Global PointerImg%
 Global launchertex%
 Global BRIGHTNESS_MAX% = 220
 Global DO_ANIMATION% = True
+;PointerImg = LoadImage("GFX\cursor.PNG")
+;MaskImage PointerImg,0,0,0
 MenuFont1 = LoadFont("OCR A Becker RUS-LAT.TTF", 13)
 MenuFont2 = LoadFont("OCR A Becker RUS-LAT.TTF", 16)
 
@@ -386,8 +395,9 @@ FreeImage tempImg
 Global LogoImg = LoadImage("GFX\scplogo.png")
 ScaleImage(LogoImg,GraphicsWidth() / 1280.0, GraphicsHeight() / 720.0)
 
-Global font1 = LoadFont("GFX\YouMurderer BB.TTF", 24)
-Global font	 = LoadFont("GFX\YouMurderer BB.TTF", 128)
+Global font1 	= LoadFont("OCR A Becker RUS-LAT.TTF", 24) ;LoadFont("GFX\YouMurderer BB.TTF", 24)
+Global font	 	= LoadFont("OCR A Becker RUS-LAT.TTF", 128) ;LoadFont("GFX\YouMurderer BB.TTF", 128)
+Global signfont	= LoadFont("GFX\YouMurderer BB.TTF", 128)
 
 Const hit_map = 1
 Const hit_map2 = 5
@@ -434,8 +444,8 @@ Global DropSpeed#
 ;^^^^^^
 
 
-Global shake2coeff# = 1.0
-Global shakeZ# = 1.0
+Global shake2coeff# = 1.5
+Global shakeZ# = 1.5
 Global shakeX# = 0.0
 
 Type ENEMIES
@@ -1163,9 +1173,9 @@ While QUIT
 		EndIf
 		
 		If shake < 0.0 Then
- 			up = up - 0.005
+ 			up = up - 0.0055
 		Else
-			up = up + 0.005
+			up = up + 0.0055
 		EndIf
 		
 		If up > 0.095 Then up = 0.095
@@ -1303,7 +1313,7 @@ While QUIT
 			UpdateBlur(0.4)	
 		EndIf		
 	EndIf
-	SetFont font1
+	SetFont MenuFont2
 	If AFKMode = False Then UpdateChatMsgs()
 
 
@@ -1326,7 +1336,6 @@ While QUIT
 		EndIf
 		
 		If ChatOpened Then
-			
 			SelectedInputBox = 1
 			If Len(message$) > 12 Then
 				message$ = InputBox(0, GraphicsHeight()-22, 130+(Len(message$)-12)*10, 22, message$)
@@ -1335,6 +1344,8 @@ While QUIT
 			EndIf
 			
 			If Len(message$) > 100 Then message$ = Left(message$,100)
+			
+			;DrawImage PointerImg, MouseX(), MouseY()
 		EndIf
 	EndIf
 	
@@ -2800,10 +2811,9 @@ Function CreateMap(floors)
 End Function
 
 Function DrawFloorMarkers()
-	
-	SetFont font 
+	SetFont signfont
 	For i = 1 To flooramount
-		number$=""
+		number$ = ""
 		
 		If i > 40 Then
 			Select Rand(700)
@@ -2827,6 +2837,12 @@ Function DrawFloorMarkers()
 					number = "b hin  y  "
 				Case 10
 					number = " "
+				Case 11
+					number = "NO"
+				Case 12
+					number = "?"
+				Case 13
+					number = "DO T LO K  T ME"
 				Default
 					number = (i+1)
 			End Select
@@ -2864,7 +2880,7 @@ Function DrawFloorMarkers()
 		
 		
 	Next
-	SetFont font1
+	SetFont signfont
 	
 	SetBuffer BackBuffer() 	
 	
@@ -2949,16 +2965,16 @@ Function UpdateFloors()
 						AmbientTimer = 1000
 						If FloorTimer(i) = 31 Then StopChannel(MusicChannel) : PlaySound(MusicElevator)
 						If FloorTimer(i) > 90 And FloorTimer(i) < 180 Then
-							camshake# = 0.4
+							camshake# = 0.5
 						EndIf
 						If FloorTimer(i) > 179 And FloorTimer(i) < 210 Then
-							camshake# = 1.2
+							camshake# = 1.3
 						EndIf
 						If FloorTimer(i) > 209 And FloorTimer(i) < 620 Then
-							camshake# = 0.8
+							camshake# = 0.9
 						EndIf
 						If FloorTimer(i) > 619 And FloorTimer(i) < 1800 Then
-							camshake# = 0.4
+							camshake# = 0.6
 						EndIf
 						
 						If FloorTimer(i) = 1900 Then
@@ -5493,24 +5509,24 @@ Function Kill()
 				temp = False
 				PauseTimer = 0
 				While temp = False
-					Color 10,10,10
+					Color 15,15,15
 					Cls
 					RenderWorld
 					UpdateBlur(1.00)
 					
-					SetFont font
-					Color 10,10,10
+					SetFont signfont
+					Color 65,15,15
 					Text (GraphicsWidth () / 2)-227,(GraphicsHeight () / 2)-115,"YOU DIED"
 					Color PauseTimer,PauseTimer,PauseTimer
 					Text (GraphicsWidth () / 2)-224,(GraphicsHeight () / 2)-118,"YOU DIED"
 					
 					SetFont font1
-					Color 10,10,10
+					Color 15,15,15
 					Text (GraphicsWidth () / 2)-114,(GraphicsHeight () / 2)+2,"Press ESC to restart"
 					Color PauseTimer,PauseTimer,PauseTimer
 					Text (GraphicsWidth () / 2)-111,(GraphicsHeight () / 2),"Press ESC to restart"
 					
-					Color 10,10,10
+					Color 15,15,15
 					Text (GraphicsWidth () / 2)-114,(GraphicsHeight () / 2)+21,"Press SPACEBAR to quit"
 					Color PauseTimer,PauseTimer,PauseTimer
 					Text (GraphicsWidth () / 2)-111,(GraphicsHeight () / 2)+19,"Press SPACEBAR to quit"
@@ -5609,7 +5625,6 @@ Function GetINIFloat$(file$, section$, parameter$)
 	Return Float(GetINIString(file$, section$, parameter$))
 End Function
 
-
 Function WordWrap%(A$,X,Y,W,H,Leading=0, center = 0)
 	;Display A$ starting at X,Y - no wider than W and no taller than H (all in pixels).
 	;Leading is optional extra vertical spacing in pixels
@@ -5643,8 +5658,8 @@ Function WordWrap%(A$,X,Y,W,H,Leading=0, center = 0)
 	EndIf
 	Return Len(FittedText)
 End Function
+
 Function PutINIValue%(file$, INI_sSection$, INI_sKey$, INI_sValue$)
-	
 	; Returns: True (Success) Or False (Failed)
 	
 	INI_sSection = "[" + Trim$(INI_sSection) + "]"
@@ -5723,11 +5738,9 @@ Function PutINIValue%(file$, INI_sSection$, INI_sKey$, INI_sValue$)
 	CloseFile INI_lFileHandle
 	
 	Return True ; Success
-	
 End Function
 
 Function INI_FileToString$(INI_sFilename$)
-	
 	Local INI_sString$ = ""
 	Local INI_lFileHandle%= ReadFile(INI_sFilename)
 	If INI_lFileHandle <> 0 Then
@@ -5737,22 +5750,17 @@ Function INI_FileToString$(INI_sFilename$)
 		CloseFile INI_lFileHandle
 	End If
 	Return INI_sString
-	
 End Function
 
 Function INI_CreateSection$(INI_lFileHandle%, INI_sNewSection$)
-	
 	If FilePos(INI_lFileHandle) <> 0 Then WriteLine INI_lFileHandle, "" ; Blank Line between sections
 	WriteLine INI_lFileHandle, INI_sNewSection
 	Return INI_sNewSection
-	
 End Function
 
 Function INI_CreateKey%(INI_lFileHandle%, INI_sKey$, INI_sValue$)
-	
 	WriteLine INI_lFileHandle, INI_sKey + " = " + INI_sValue
 	Return True
-	
 End Function
 
 Function MouseOn%(x%, y%, width%, height%)

@@ -1,0 +1,5 @@
+note: it is recommended to set the square resolution for program to avoid 3d view stretch
+
+how to rotate camera: hold ctrl and move mouse
+
+how to move camera: hold right mouse button and move mouse, also you can zoom with mouse wheel
