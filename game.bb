@@ -7,7 +7,7 @@
 
 Graphics3D 640, 480, 32, 2
 
-Global GAME_VERSION$ = "v0.25"
+Global GAME_VERSION$ = "v0.3"
 
 AppTitle "SCP 087-D " + GAME_VERSION
 
@@ -72,7 +72,7 @@ Local selectedGFXmode%
 selectedGFXmode=1
 
 For i = 1 To CountGfxModes3D()
-	If (GfxMode3D(i) And GfxModeDepth(i)=colordepth) Then
+	If (GfxMode3D(i) And GfxModeDepth(i) = colordepth) Then
 		If (GfxModeWidth(i)>=screenwidth And GfxModeHeight(i)>=screenheight) Then
 			selectedGFXmode=i
 			Exit
@@ -261,9 +261,9 @@ While True
 	
 	For i=1 To CountGfxModes3D()
 		If (GfxMode3D(i)) Then
-			If (GfxModeDepth(i)=colordepth) Then
+			If (GfxModeDepth(i) = colordepth) Then
 				If selectedGFXmode = i Then Color 30,30,100 Else Color 30,30,30
-				If (Button(dx+35,dy+120,80,20,Str(GfxModeWidth(i))+"x"+Str(GfxModeHeight(i)),False)) Then
+				If (Button(dx+35,dy+120,80,20,Str(GfxModeWidth(i))+ "x" +Str(GfxModeHeight(i)),False)) Then
 					selectedGFXmode=i
 					screenwidth=GfxModeWidth(i)
 					screenheight=GfxModeHeight(i)
@@ -300,7 +300,7 @@ While True
 	If fullscreen Then Color 255,255,255 Else Color 100,100,100
 	Text 640-130,480-96,"Color depth:"
 	Color 30,30,30
-	If (Button(640-46,480-100,44,24,Str(colordepth)+"-bit",(Not fullscreen))) Then
+	If (Button(640-46,480-100,44,24,Str(colordepth)+ "-bit",(Not fullscreen))) Then
 		If (colordepth=32) Then
 			colordepth=16
 		Else
@@ -308,7 +308,7 @@ While True
 		EndIf
 		PutINIValue("options.ini","options","colordepth",Str(colordepth))
 		For i=1 To CountGfxModes3D()
-			If (GfxMode3D(i) And GfxModeDepth(i)=colordepth) Then
+			If (GfxMode3D(i) And GfxModeDepth(i) = colordepth) Then
 				If (GfxModeWidth(i)>=screenwidth And GfxModeHeight(i)>=screenheight) Then
 					selectedGFXmode=i
 					Exit
@@ -519,26 +519,28 @@ Const ACT_BLUR = 28, ACT_BROKENROOM = 29, ACT_173_2 = 30, ACT_BIGSTAIRSROOM = 31
 Const ACT_RUN_3 = 36, ACT_RUN_4 = 37, ACT_ILLUSIONS = 38, ACT_ILLUSIONS_2 = 39, ACT_HALLWAYTRAP = 40, ACT_TRICK3 = 41, ACT_ENDING_2 = 42, ACT_TRANSITION = 43, ACT_ATTENTION = 44
 Const ACT_ELEVATOR_START = 45, ACT_ELEVATOR_END = 46, ACT_FLASH_2 = 47, ACT_CELL_2 = 48, ACT_CORNER_TRAP = 49, ACT_MENTAL_TRAP = 50, ACT_TURNAROUND = 51, ACT_UNKNOWN = 52, ACT_SPIDER = 53, ACT_SUDDEN_ATTACK = 54
 Const ACT_GORIGHT = 55, ACT_RANDOM_SOUND = 56
-
 ;Collisions hit_er,hit_map, 2,3
+
+
 ;-----------------------------------------------------------;
 ;-----------------      SFX Start      ---------------------;
-
 Dim StepSFX(8)
 Dim MonsterStepSFX(4)
 Dim RunSFX(8)
 Dim RunBreathSFX(3)
 For i = 0 To 3
-	MonsterStepSFX(i)=Load3DSound("SFX\Monsters\step"+(i+1)+".ogg")
+	MonsterStepSFX(i) = Load3DSound("SFX\Monsters\step" + (i + 1) + ".ogg")
 Next
+
 For i = 0 To 7
-	StepSFX(i)=Load3DSound("SFX\Player\step"+(i+1)+".ogg")
-	RunSFX(i)=Load3DSound("SFX\Player\run"+(i+1)+".ogg")
+	StepSFX(i) = Load3DSound("SFX\Player\step" + (i + 1) + ".ogg")
+	RunSFX(i) = Load3DSound("SFX\Player\run" + (i + 1) + ".ogg")
 	SoundVolume StepSFX(i), 0.6
 	SoundVolume RunSFX(i), 0.6
 Next
-For i = 0 To 2
-	RunBreathSFX(i)=LoadSound("SFX\Player\breath"+i+".ogg")
+
+For i = 0 To 3
+	RunBreathSFX(i) = LoadSound("SFX\Player\breath" + i + ".ogg")
 Next
 
 RunBreathSFX(3)=LoadSound("SFX\Player\breath3.ogg")
@@ -546,9 +548,9 @@ Global BreathChnl = RunBreathSFX(0), BreathChannel
 BreathChannel = PlaySound(0)
 
 loudstepsound=Load3DSound("SFX\Events\loudstep.ogg")
-Dim HorrorSFX(5)
-For i = 0 To 5
-	HorrorSFX(i)=LoadSound("SFX\Horror\horror"+(i+1)+".ogg")
+Dim HorrorSFX(9)
+For i = 0 To 8
+	HorrorSFX(i) = LoadSound("SFX\Horror\horror" + (i + 1) + ".ogg")
 Next
 Global DeathSFX = LoadSound("SFX\death.ogg")
 ;Global IntroSFX = LoadSound("SFX\introdoor.ogg") <---- Unused for now, since i can't find out how to use this sound
@@ -575,12 +577,12 @@ Global MUSIC_ON = True
 
 Dim AmbientSFX(111)
 For i = 0 To 110
-	AmbientSFX(i) = Load3DSound("SFX\Ambients\ambient"+(i+1)+".ogg")
+	AmbientSFX(i) = Load3DSound("SFX\Ambients\ambient" + (i + 1) + ".ogg")
 Next
 
 Dim RadioSFX(5)
 For i = 0 To 4
-	RadioSFX(i) = LoadSound("SFX\Radio\radio"+(i+1)+".ogg")
+	RadioSFX(i) = LoadSound("SFX\Radio\radio" + (i +  1)+ ".ogg")
 Next
 
 Global MusicIntro = LoadSound("SFX\Music\The Beginning.ogg")
@@ -617,26 +619,44 @@ Global MetalSFX = LoadSound("SFX\Events\metal.ogg")
 Global YouAreBraveSFX = LoadSound("SFX\Monsters\youarebrave.ogg")
 
 Global AmbientCaveSFX = LoadSound("SFX\Events\ambient_cave.ogg")
-
 ;-----------------      SFX End      ---------------------;
 ;---------------------------------------------------------;
 
 
-
 ;---------------------------------------------------------;
 ;-----------------      GFX Start      -------------------;
-
 Global mentalmesh = PlayerMesh
 Global spider
 ; Monsters
-Global mental = LoadTexture("GFX\npc\mental.jpg")
+
+Dim MentalTextures(2)
+MentalTextures(0) = LoadTexture("GFX\npc\mental.jpg")
+MentalTextures(1) = LoadTexture("GFX\npc\mental-2.jpg")
+MentalTextures(2) = LoadTexture("GFX\npc\mental-3.jpg")
+Global mental = LoadTexture("GFX\npc\mental.jpg") ; need for server
 Global mental2 = LoadTexture("GFX\npc\mental-2.jpg")
 Global mental3 = LoadTexture("GFX\npc\mental-3.jpg")
-Global tex173 = LoadTexture("GFX\npc\173.jpg")
+
+Dim RedmistTextures(2)
+RedmistTextures(0) = LoadTexture("GFX\npc\173.jpg")
+RedmistTextures(1) = LoadTexture("GFX\npc\173-2.jpg")
+RedmistTextures(2) = LoadTexture("GFX\npc\173-3.jpg")
+Global tex173 = LoadTexture("GFX\npc\173.jpg") ; need for server
 Global tex1732 = LoadTexture("GFX\npc\173-2.jpg")
-Global eyekiller = LoadTexture("GFX\npc\eyekiller.jpg")
-Global clothwandertex = LoadTexture("GFX\npc\clothwander.jpg")
-Global unknownTex = LoadTexture("GFX\npc\unknown.jpg")
+
+Dim EyekillerTextures(2)
+EyekillerTextures(0) = LoadTexture("GFX\npc\eyekiller.jpg")
+EyekillerTextures(1) = LoadTexture("GFX\npc\eyekiller-2.jpg")
+EyekillerTextures(2) = LoadTexture("GFX\npc\eyekiller-3.jpg")
+Global eyekiller = LoadTexture("GFX\npc\eyekiller.jpg") ; need for server
+
+Dim UnknownTextures(2)
+UnknownTextures(0) = LoadTexture("GFX\npc\unknown.jpg")
+UnknownTextures(1) = LoadTexture("GFX\npc\unknown-2.jpg")
+UnknownTextures(2) = LoadTexture("GFX\npc\unknown-3.jpg")
+
+Global clothwandertex = LoadTexture("GFX\npc\clothwander.jpg") ;;TODO make/find more texture variants for clothwander
+;Global unknowntex = LoadTexture("GFX\npc\unknown.jpg")
 
 Dim GlimpseTextures(6)
 GlimpseTextures(0)= LoadTexture("GFX\npc\glimpse1.png",1+2)
@@ -663,8 +683,6 @@ Collisions hit_friendly,hit_monster, 1,3
 Collisions hit_monster,hit_friendly, 1,3
 Collisions hit_monster,hit_map, 2,2 
 Collisions hit_invisible,hit_map, 2,2 
-
-
 ;-----------------      GFX End      ---------------------;
 ;---------------------------------------------------------;
 
@@ -747,7 +765,7 @@ If introskip = False And PlayState = GAME_SOLO Then
 	
 	Dim introimg(5) 
 	For i = 0 To 4
-		introimg(i) = LoadImage("GFX\intro"+(i+1)+".jpg")
+		introimg(i) = LoadImage("GFX\intro" + (i + 1) + ".jpg")
 		ScaleImage(introimg(i),GraphicsWidth() / 1920.0,GraphicsHeight() / 1080.0)
 	Next
 EndIf
@@ -768,9 +786,10 @@ While temp
 Wend
 Cls
 Flip
+
+
 ;-----------------   Intro Sequence  ---------------------;
 ;---------------------------------------------------------;
-
 If PlayState = GAME_SOLO And skipintro = False And area <> "The Second" And sector <> "Lower" Then
 
 Delay 1500
@@ -812,6 +831,7 @@ Wend
 EndIf
 ;----------------End Of Intro Sequence--------------------;
 ;---------------------------------------------------------;
+
 
 EntityType collider, hit_map
 MoveMouse viewport_center_x, viewport_center_y
@@ -1192,7 +1212,6 @@ While QUIT
 			side = side + 0.002; * speedMultiplier
 			If EndingSceneMod Then side = side - 0.001
 		EndIf
-		
 		;----
 		
 		
@@ -1322,7 +1341,7 @@ While QUIT
 			If ChatOpened Then
 				If message$ <> "" Then
 					If PlayState = GAME_CLIENT Then
-						SendToServer("chat"+message$)
+						SendToServer("chat" +message$)
 					Else
 						AddChatMsg(PlayerName + ": " + message$,Players(0)\Red,Players(0)\Green,Players(0)\Blue,-1,True)
 					EndIf
@@ -1509,7 +1528,7 @@ While QUIT
 								If Players(i)\Rights<>RIGHTS_HOST Then
 									Color 30,30,30
 									If(Button(width/2+105,height/2-180+dy-addheight,buttwidth,buttheight,buttstr,Players(i)\Rights=RIGHTS_ADMIN Or (Rights <> RIGHTS_HOST And Rights <> RIGHTS_ADMIN))) Then
-										AddChatMsg(Players(i)\Name+" has been kicked by " + Players(ID)\Name + ".",255,0,0,i,True)
+										AddChatMsg(Players(i)\Name+ " has been kicked by " + Players(ID)\Name + ".",255,0,0,i,True)
 										
 										If PlayState = GAME_SERVER Then
 											WriteInt Server,SERVER_MESSAGE_KICK ;kick the player
@@ -1517,10 +1536,10 @@ While QUIT
 											FreeEntity GetChild(Players(i)\Pivot,1)
 											FreeEntity Players(i)\Pivot
 											Delete Players(i)
-											Players(i)=Null
+											Players(i) = Null
 											PlayerCount=PlayerCount-1
 										Else
-											MessageSendToServer = "kick"+i
+											MessageSendToServer = "kick" +i
 										EndIf
 									EndIf
 								EndIf
@@ -1537,7 +1556,7 @@ While QUIT
 										PositionEntity(collider,EntityX(Players(i)\Pivot),EntityY(Players(i)\Pivot),EntityZ(Players(i)\Pivot))
 										EntityType collider,hit_invisible
 									Else
-										MessageSendToServer = "teleport"+i
+										MessageSendToServer = "teleport" +i
 									EndIf
 								EndIf
 							EndIf
@@ -1587,7 +1606,7 @@ While QUIT
 									buttstr$ = "Admin"
 									If(Button(width/2+135+dx,height/2-180+dy-addheight,buttwidth,buttheight,buttstr,buttstr=playerright)) Then
 										Players(i)\Rights = RIGHTS_ADMIN
-										MessageSendToServer = "rights_admin"+i
+										MessageSendToServer = "rights_admin" +i
 									EndIf
 									dx = dx - buttwidth - 2
 								EndIf
@@ -1596,7 +1615,7 @@ While QUIT
 								buttstr$ = "Monster"
 								If(Button(width/2+135+dx,height/2-180+dy-addheight,buttwidth,buttheight,buttstr,buttstr=playerright)) Then
 									Players(i)\Rights = RIGHTS_MONSTER
-									MessageSendToServer = "rights_monster"+i
+									MessageSendToServer = "rights_monster" +i
 								EndIf
 								
 								Color 30,30,30
@@ -1604,7 +1623,7 @@ While QUIT
 								buttstr$ = "Class D"
 								If(Button(width/2+135+dx,height/2-180+dy-addheight,buttwidth,buttheight,buttstr,buttstr=playerright)) Then
 									Players(i)\Rights = RIGHTS_CLASSD
-									MessageSendToServer = "rights_classd"+i
+									MessageSendToServer = "rights_classd" +i
 									
 									Players(i)\PlayingAs = PLAYER_CLASSD
 									EntityTexture GetChild(Players(i)\Pivot,1),LoadTexture("GFX\npc\player.jpg")
@@ -1630,7 +1649,7 @@ While QUIT
 				buttstr$ = "Flash"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=0 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 0
-					MessageSendToServer = "act"+ACT_FLASH
+					MessageSendToServer = "act" +ACT_FLASH
 					Players(ID)\Act = ACT_FLASH
 					Act = ACT_FLASH
 					UpdateLights()
@@ -1641,7 +1660,7 @@ While QUIT
 				buttstr$ = "Walk"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=1 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 1
-					MessageSendToServer = "act"+ACT_WALK
+					MessageSendToServer = "act" +ACT_WALK
 					Players(ID)\Act = ACT_WALK
 					Act = ACT_WALK
 					UpdateLights()
@@ -1652,7 +1671,7 @@ While QUIT
 				buttstr$ = "Run"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=2 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 2
-					MessageSendToServer = "act"+ACT_RUN
+					MessageSendToServer = "act" +ACT_RUN
 					Players(ID)\Act = ACT_RUN
 					Act = ACT_RUN
 					UpdateLights()
@@ -1664,7 +1683,7 @@ While QUIT
 				buttstr$ = "Flash 2"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=4 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 4
-					MessageSendToServer = "act"+ACT_FLASH_2
+					MessageSendToServer = "act" +ACT_FLASH_2
 					Players(ID)\Act = ACT_FLASH_2
 					Act = ACT_FLASH_2
 					UpdateLights()
@@ -1675,7 +1694,7 @@ While QUIT
 				buttstr$ = "DLAM"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=3 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 3
-					MessageSendToServer = "act"+ACT_173
+					MessageSendToServer = "act" +ACT_173
 					Players(ID)\Act = ACT_173
 					Act = ACT_173
 					UpdateLights()
@@ -1686,7 +1705,7 @@ While QUIT
 				buttstr$ = "Behind"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=5 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 5
-					MessageSendToServer = "act"+ACT_BEHIND
+					MessageSendToServer = "act" +ACT_BEHIND
 					Players(ID)\Act = ACT_BEHIND
 					Act = ACT_BEHIND
 					UpdateLights()
@@ -1698,7 +1717,7 @@ While QUIT
 				buttstr$ = "Blur"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=6 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 6
-					MessageSendToServer = "act"+ACT_BLUR
+					MessageSendToServer = "act" +ACT_BLUR
 					Players(ID)\Act = ACT_BLUR
 					Act = ACT_BLUR
 					UpdateLights()
@@ -1710,7 +1729,7 @@ While QUIT
 				buttstr$ = "Darkness"
 				If Button(x+dx,y+dy,buttwidth,buttheight,buttstr,ChosenButton(1)=7 Or Act=0 Or VisibilityTimer > 0) Then
 					ChosenButton(1) = 7
-					MessageSendToServer = "act"+ACT_DARKNESS
+					MessageSendToServer = "act" +ACT_DARKNESS
 					Players(ID)\Act = ACT_DARKNESS
 					Act = ACT_DARKNESS
 					UpdateLights()
@@ -1728,7 +1747,7 @@ While QUIT
 				If Button(x+100,height/2-70,buttwidth,buttheight,buttstr,VisibilityTimer>0) Then
 					If Act=0 Then
 						ChosenButton(1) = 0
-						MessageSendToServer = "act"+ACT_FLASH
+						MessageSendToServer = "act" +ACT_FLASH
 						Act = ACT_FLASH
 						Players(ID)\Act = ACT_FLASH
 					Else
@@ -2568,142 +2587,142 @@ Function CreateMap(floors)
 	For i = Firstfloor To floors-1
 		If i > 135 Then Exit
 		If i = 0 Then
-			CreateFloor(map0,i) : MapString = MapString+"00"
+			CreateFloor(map0,i) : MapString = MapString+ "00"
 		ElseIf i < 7 And FloorTestMode = False Then
-			CreateFloor(map,i) : MapString = MapString+"99"
+			CreateFloor(map,i) : MapString = MapString+ "99"
 		Else
 			Select FloorActions(i+1)
 				Case ACT_LIGHT
 					If Rand(0,2)=0 Then
-						CreateFloor(map2,i) : MapString = MapString+"02"
+						CreateFloor(map2,i) : MapString = MapString+ "02"
 					ElseIf Rand(0,2)=0 Then
-						CreateFloor(map4,i) : MapString = MapString+"04"
+						CreateFloor(map4,i) : MapString = MapString+ "04"
 					Else
-						CreateFloor(map13,i) : MapString = MapString+"13"
+						CreateFloor(map13,i) : MapString = MapString+ "13"
 					EndIf
 				Case ACT_GORIGHT
-					CreateFloor(map4,i) : MapString = MapString+"04"
+					CreateFloor(map4,i) : MapString = MapString+ "04"
 				Case ACT_SUDDEN_ATTACK
-					CreateFloor(map3,i) : MapString = MapString+"03"
+					CreateFloor(map3,i) : MapString = MapString+ "03"
 				Case ACT_173
-					CreateFloor(map2,i) : MapString = MapString+"02"
+					CreateFloor(map2,i) : MapString = MapString+ "02"
 				Case ACT_173_2
-					CreateFloor(map22,i) : MapString = MapString+"22"
+					CreateFloor(map22,i) : MapString = MapString+ "22"
 				Case ACT_CELL
-					CreateFloor(map1,i) : MapString = MapString+"01"
+					CreateFloor(map1,i) : MapString = MapString+ "01"
 				Case ACT_CELL_2
-					CreateFloor(map14,i) : MapString = MapString+"14"
+					CreateFloor(map14,i) : MapString = MapString+ "14"
 				Case ACT_CORNER_TRAP
-					CreateFloor(map2,i) : MapString = MapString+"02"
+					CreateFloor(map2,i) : MapString = MapString+ "02"
 				Case ACT_TRICK1
-					CreateFloor(map5,i)	 : MapString = MapString+"05"
+					CreateFloor(map5,i)	 : MapString = MapString+ "05"
 				Case ACT_TRICK2
-					CreateFloor(map4,i) : MapString = MapString+"04"
+					CreateFloor(map4,i) : MapString = MapString+ "04"
 				Case ACT_RUN, ACT_RUN_4, ACT_WALK, ACT_LIGHTS, ACT_TRAP, ACT_LOCK, ACT_CHARGE173
-					CreateFloor(map,i) : MapString = MapString+"99"
+					CreateFloor(map,i) : MapString = MapString+ "99"
 				Case ACT_WAIT
-					CreateFloor(map11, i) : MapString = MapString+"11"
+					CreateFloor(map11, i) : MapString = MapString+ "11"
 				Case ACT_BEHIND
-					CreateFloor(map13,i) : MapString = MapString+"13"
+					CreateFloor(map13,i) : MapString = MapString+ "13"
 				Case ACT_ELEVATOR
-					CreateFloor(elevator,i) : MapString = MapString+"80"
+					CreateFloor(elevator,i) : MapString = MapString+ "80"
 				Case ACT_BLUR
-					CreateFloor(map17,i) : MapString = MapString+"17"
+					CreateFloor(map17,i) : MapString = MapString+ "17"
 				Case ACT_BROKENROOM
-					CreateFloor(map20,i) : MapString = MapString+"20"
+					CreateFloor(map20,i) : MapString = MapString+ "20"
 				Case ACT_BIGSTAIRSROOM
-					CreateFloor(map16,i) : MapString = MapString+"16"
+					CreateFloor(map16,i) : MapString = MapString+ "16"
 				Case ACT_173_2
-					CreateFloor(map22,i) : MapString = MapString+"22"
+					CreateFloor(map22,i) : MapString = MapString+ "22"
 				Case ACT_MENTAL_TRAP
-					CreateFloor(map28,i) : MapString = MapString+"28"
+					CreateFloor(map28,i) : MapString = MapString+ "28"
 				Case ACT_MAZE
-					CreateFloor(map_maze,i) : MapString = MapString+"81"
+					CreateFloor(map_maze,i) : MapString = MapString+ "81"
 				Case ACT_ENDING
-					CreateFloor(mapending,i) : MapString = MapString+"82"
+					CreateFloor(mapending,i) : MapString = MapString+ "82"
 				Case ACT_NOTHING
-					CreateFloor(mapnothing,i) : MapString = MapString+"83"
+					CreateFloor(mapnothing,i) : MapString = MapString+ "83"
 				Case ACT_RUN_2, ACT_RUN_3
-					CreateFloor(map26,i) : MapString = MapString+"26"
+					CreateFloor(map26,i) : MapString = MapString+ "26"
 				Case ACT_TRANSITION
-					CreateFloor(map_transition,i) : MapString = MapString+"84"
+					CreateFloor(map_transition,i) : MapString = MapString+ "84"
 				Case ACT_ATTENTION
-					CreateFloor(map12,i) : MapString = MapString+"12"
+					CreateFloor(map12,i) : MapString = MapString+ "12"
 				Case ACT_UNKNOWN
-					CreateFloor(map23,i) : MapString = MapString+"23"
+					CreateFloor(map23,i) : MapString = MapString+ "23"
 				Case ACT_ELEVATOR_START
-					CreateFloor(map_elevator,i) : MapString = MapString+"80"
+					CreateFloor(map_elevator,i) : MapString = MapString+ "80"
 				Case ACT_ELEVATOR_END
-					CreateFloor(map_elevator_end,i) : MapString = MapString+"85"
+					CreateFloor(map_elevator_end,i) : MapString = MapString+ "85"
 				Case 0, ACT_FLASH
 					Select Rand(0,30)
 						Case 1,2
-							CreateFloor(map,i) : MapString = MapString+"99"
+							CreateFloor(map,i) : MapString = MapString+ "99"
 						Case 3,4
-							CreateFloor(map2,i) : MapString = MapString+"02"
+							CreateFloor(map2,i) : MapString = MapString+ "02"
 						Case 5,6
-							CreateFloor(map3,i) : MapString = MapString+"03"
+							CreateFloor(map3,i) : MapString = MapString+ "03"
 						Case 7
-							CreateFloor(map4,i) : MapString = MapString+"04"
+							CreateFloor(map4,i) : MapString = MapString+ "04"
 						Case 8
-							CreateFloor(map5,i) : MapString = MapString+"05"
+							CreateFloor(map5,i) : MapString = MapString+ "05"
 						Case 9
-							CreateFloor(map6,i) : MapString = MapString+"06"
+							CreateFloor(map6,i) : MapString = MapString+ "06"
 						Case 10,11
-							CreateFloor(map7,i) : MapString = MapString+"07"
+							CreateFloor(map7,i) : MapString = MapString+ "07"
 						Case 12
 							If i > 50 Then 
-								CreateFloor(map8,i) : MapString = MapString+"08"
+								CreateFloor(map8,i) : MapString = MapString+ "08"
 							Else 
-								CreateFloor(map,i) : MapString = MapString+"99"
+								CreateFloor(map,i) : MapString = MapString+ "99"
 							EndIf
 						Case 13
-							CreateFloor(map,i)  : MapString = MapString+"99";was map9 previously
+							CreateFloor(map,i)  : MapString = MapString+ "99";was map9 previously
 						Case 14
-							CreateFloor(map,i)  : MapString = MapString+"99";was map10 previously
+							CreateFloor(map,i)  : MapString = MapString+ "99";was map10 previously
 						Case 15
-							CreateFloor(map,i) : MapString = MapString+"99"
+							CreateFloor(map,i) : MapString = MapString+ "99"
 						Case 16
-							CreateFloor(map12,i) : MapString = MapString+"12"
+							CreateFloor(map12,i) : MapString = MapString+ "12"
 						Case 17
-							CreateFloor(map14,i) : MapString = MapString+"14"
+							CreateFloor(map14,i) : MapString = MapString+ "14"
 						Case 18
 							If i < 50 Then 
-								CreateFloor(map15,i)  : MapString = MapString+"15"
+								CreateFloor(map15,i)  : MapString = MapString+ "15"
 							Else 
-								CreateFloor(map,i) : MapString = MapString+"99"
+								CreateFloor(map,i) : MapString = MapString+ "99"
 							EndIf
 						Case 19
-							CreateFloor(map18,i) : MapString = MapString+"18"
+							CreateFloor(map18,i) : MapString = MapString+ "18"
 						Case 20
 							If i > 50 Then 
-								CreateFloor(map19,i)  : MapString = MapString+"19"
+								CreateFloor(map19,i)  : MapString = MapString+ "19"
 							Else
-								CreateFloor(map,i) : MapString = MapString+"99"
+								CreateFloor(map,i) : MapString = MapString+ "99"
 							EndIf
 						Case 21
 							If i > 50 Then 
-								CreateFloor(map21,i)  : MapString = MapString+"21"
+								CreateFloor(map21,i)  : MapString = MapString+ "21"
 							Else 
-								CreateFloor(map,i) : MapString = MapString+"99"
+								CreateFloor(map,i) : MapString = MapString+ "99"
 							EndIf
 						Case 22
 							If i > 50 Then 
-								CreateFloor(map26,i)  : MapString = MapString+"26"
+								CreateFloor(map26,i)  : MapString = MapString+ "26"
 							Else 
-								CreateFloor(map,i) : MapString = MapString+"99"
+								CreateFloor(map,i) : MapString = MapString+ "99"
 							EndIf
 						Case 23
 							If i > 50 Then
-								CreateFloor(map27,i) : MapString = MapString+"27"
+								CreateFloor(map27,i) : MapString = MapString+ "27"
 							Else
-								CreateFloor(map,i) : MapString = MapString+"99"
+								CreateFloor(map,i) : MapString = MapString+ "99"
 							EndIf
 						Default
-							CreateFloor(map,i) : MapString = MapString+"99"
+							CreateFloor(map,i) : MapString = MapString+ "99"
 					End Select
 				Default 
-					CreateFloor(map,i) : MapString = MapString+"99"
+					CreateFloor(map,i) : MapString = MapString+ "99"
 			End Select 
 		EndIf
 	Next
@@ -2857,7 +2876,7 @@ Function DrawFloorMarkers()
 			Next
 		EndIf
 		
-		FloorNumberTexture(i)=CreateTexture(512,512) 	
+		FloorNumberTexture(i) = CreateTexture(512,512) 	
 		
 		cube = CreateObject()
 		ScaleEntity cube, 0.25,0.25,0.25
@@ -3022,9 +3041,9 @@ Function UpdateFloors()
 					If FloorTimer(i) = 1 Then
 						If PlayerFloor = i Then
 							If Floor(i/2.0)=Ceil(i/2.0) Then
-								CurrEnemy = CreateEnemy(endx, FloorY-0.5, FloorZ,mental) : CurrEnemy\speed = 0.013
+								CurrEnemy = CreateEnemy(endx, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.013
 							Else
-								CurrEnemy = CreateEnemy(endx, FloorY-0.5, FloorZ,mental2) : CurrEnemy\speed = 0.013
+								CurrEnemy = CreateEnemy(endx, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.013
 							EndIf
 							CurrEnemy\playerlastx# = EntityX(collider)
 							CurrEnemy\playerlastz# = EntityZ(collider)
@@ -3066,9 +3085,9 @@ Function UpdateFloors()
 					If FloorTimer(i) = 1 Then
 						If PlayerFloor = i Then
 							If Floor(i/2.0)=Ceil(i/2.0) Then
-								CurrEnemy = CreateEnemy(0.5, FloorY-0.5, -10,mental) : CurrEnemy\speed = 0.0
+								CurrEnemy = CreateEnemy(0.5, FloorY-0.5, -10,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.0
 							Else
-								CurrEnemy = CreateEnemy(7.3, FloorY-0.5, 2.7,mental) : CurrEnemy\speed = 0.0
+								CurrEnemy = CreateEnemy(7.3, FloorY-0.5, 2.7,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.0
 							EndIf
 							CurrEnemy\playerlastx# = EntityX(collider)
 							CurrEnemy\playerlastz# = EntityZ(collider)
@@ -3093,7 +3112,7 @@ Function UpdateFloors()
 							If EntityVisible(CurrEnemy\obj, camera) Then
 								CurrEnemy\dorotation = True
 								CurrEnemy\speed = 0.02
-								If (floortimer(i) = 2 And distance# < Distance2(EntityX(CurrEnemy\collider),EntityY(CurrEnemy\collider),EntityZ(CurrEnemy\collider)) < 1.5) Then PlaySound(HorrorSFX(Rand(0,2)))
+								If (floortimer(i) = 2 And distance# < Distance2(EntityX(CurrEnemy\collider),EntityY(CurrEnemy\collider),EntityZ(CurrEnemy\collider)) < 1.5) Then PlaySound(HorrorSFX(Rand(0, 9)))
 								floortimer(i) = 3
 							Else
 								CurrEnemy\dorotation = False
@@ -3122,17 +3141,17 @@ Function UpdateFloors()
 							EndIf
 						EndIf
 						
-						If FloorTimer(i) = 100 Then CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ, mental) : CurrEnemy\speed = 0.013
+						If FloorTimer(i) = 100 Then CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ, MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.013
 						If FloorTimer(i) = 210 Then PlaySound (FireOn)
 						If FloorTimer(i) = 250 Then AmbientLight Brightness,Brightness,Brightness
-						If FloorTimer(i) = 320  Then PlaySound(HorrorSFX(2))
+						If FloorTimer(i) = 320  Then PlaySound(HorrorSFX(Rand(0, 9)))
 						If FloorTimer(i) = 500 Then
 							ChannelVolume MusicChannel, 1.0
 							FreeEntity CurrEnemy\collider
 							FreeEntity CurrEnemy\obj
 							Delete CurrEnemy
 							
-							FloorTimer(i)=0
+							FloorTimer(i) = 0
 						EndIf
 					EndIf
 				Case ACT_LIGHT
@@ -3171,10 +3190,10 @@ Function UpdateFloors()
 						If floortimer(i) = 314 Then CurrEnemy\dorotation = True
 						
 						If FloorTimer(i) = 130 Then
-							PlaySound(HorrorSFX(0))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 						If FloorTimer(i) = 100 Then 
-							CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ,mental3) : CurrEnemy\speed = 0.035
+							CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.035
 							CurrEnemy\dorotation = False
 							RotateEntity CurrEnemy\collider, 0,first_angle,0
 							If Distance2(EntityX(CurrEnemy\collider), EntityY(CurrEnemy\collider), EntityZ(CurrEnemy\collider)) < 2.0 Then CurrEnemy\dorotation = True
@@ -3192,7 +3211,7 @@ Function UpdateFloors()
 							FreeEntity CurrEnemy\obj
 							Delete CurrEnemy
 							
-							FloorTimer(i)=0	
+							FloorTimer(i) = 0	
 						EndIf
 					
 					EndIf
@@ -3219,13 +3238,13 @@ Function UpdateFloors()
 						If floortimer(i) = 254 Then CurrEnemy\dorotation = True
 						
 						If FloorTimer(i) = 130 Then
-							PlaySound(HorrorSFX(0))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 						If FloorTimer(i) = 100 Then 
 							If Floor(i/2.0)=Ceil(i/2.0) Then
-								CurrEnemy = CreateEnemy(startx-0.3, FloorY+1.2, FloorZ+6.0,mental) : CurrEnemy\speed = 0.035
+								CurrEnemy = CreateEnemy(startx-0.3, FloorY+1.2, FloorZ+6.0,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.035
 							Else
-								CurrEnemy = CreateEnemy(startx+0.3, FloorY+1.2, FloorZ-6.0,mental2) : CurrEnemy\speed = 0.035
+								CurrEnemy = CreateEnemy(startx+0.3, FloorY+1.2, FloorZ-6.0,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.035
 							EndIf
 							CurrEnemy\dorotation = False
 							RotateEntity CurrEnemy\collider, 0,first_angle,0
@@ -3243,7 +3262,7 @@ Function UpdateFloors()
 							FreeEntity CurrEnemy\obj
 							Delete CurrEnemy
 							
-							FloorTimer(i)=0	
+							FloorTimer(i) = 0	
 						EndIf
 					
 					EndIf
@@ -3275,13 +3294,13 @@ Function UpdateFloors()
 						If floortimer(i) = 330 Then RotateEntity CurrEnemy\collider, 0,third_angle,0
 						
 						If FloorTimer(i) = 130 Then
-							PlaySound(HorrorSFX(0))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 						If FloorTimer(i) = 100 Then 
 							If Floor(i/2.0)=Ceil(i/2.0) Then
-								CurrEnemy = CreateEnemy(startX-0.2, FloorY-0.5, FloorZ,mental) : CurrEnemy\speed = 0.035
+								CurrEnemy = CreateEnemy(startX-0.2, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.035
 							Else
-								CurrEnemy = CreateEnemy(startX+0.2, FloorY-0.5, FloorZ,mental) : CurrEnemy\speed = 0.035
+								CurrEnemy = CreateEnemy(startX+0.2, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.035
 							EndIf
 							CurrEnemy\dorotation = False
 							RotateEntity CurrEnemy\collider, 0,first_angle,0
@@ -3299,7 +3318,7 @@ Function UpdateFloors()
 							FreeEntity CurrEnemy\obj
 							Delete CurrEnemy
 							
-							FloorTimer(i)=0	
+							FloorTimer(i) = 0	
 						EndIf
 					
 					EndIf
@@ -3331,13 +3350,13 @@ Function UpdateFloors()
 						If floortimer(i) = 260 Then RotateEntity CurrEnemy\collider, 0,third_angle,0
 						
 						If FloorTimer(i) = 130 Then
-							PlaySound(HorrorSFX(0))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 						If FloorTimer(i) = 100 Then 
 							If Floor(i/2.0)=Ceil(i/2.0) Then
-								CurrEnemy = CreateEnemy(startX-3.2, FloorY-0.8, FloorZ-2.0,mental) : CurrEnemy\speed = 0.035
+								CurrEnemy = CreateEnemy(startX-3.2, FloorY-0.8, FloorZ-2.0,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.035
 							Else
-								CurrEnemy = CreateEnemy(startX+3.2, FloorY-0.8, FloorZ+2.0,mental) : CurrEnemy\speed = 0.035
+								CurrEnemy = CreateEnemy(startX+3.2, FloorY-0.8, FloorZ+2.0,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.035
 							EndIf
 							CurrEnemy\dorotation = False
 							RotateEntity CurrEnemy\collider, 0,first_angle,0
@@ -3355,7 +3374,7 @@ Function UpdateFloors()
 							FreeEntity CurrEnemy\obj
 							Delete CurrEnemy
 							
-							FloorTimer(i)=0	
+							FloorTimer(i) = 0	
 						EndIf
 					
 					EndIf
@@ -3368,14 +3387,14 @@ Function UpdateFloors()
 							If EntityInView(EnemyRedmist\collider, camera) Then
 								EnemyRedmist\speed = 0.0
 								;Animate2(EnemyRedmist\obj,AnimTime(EnemyRedmist\obj),206,250,0.05)
-								If FloorTimer(i)<10000 Then PlaySound(HorrorSFX(2)) : FloorTimer(i)=10001
+								If FloorTimer(i)<10000 Then PlaySound(HorrorSFX(Rand(0, 9))) : FloorTimer(i) = 10001
 							Else
 								EnemyRedmist\speed = 0.05
 							EndIf
 							If Distance2(EntityX(EnemyRedmist\collider),EntityY(EnemyRedmist\collider),EntityZ(EnemyRedmist\collider))<0.8 Then
 								KillTimer = max(KillTimer,1)
 									
-								FloorTimer(i)=0
+								FloorTimer(i) = 0
 							EndIf
 							If Distance2(EntityX(EnemyRedmist\collider),EntityY(EnemyRedmist\collider),EntityZ(EnemyRedmist\collider))<2.3 Then
 								EnemyRedmist\speed = 0.1
@@ -3414,14 +3433,14 @@ Function UpdateFloors()
 							If EntityInView(EnemyRedmist\collider, camera) Then
 								EnemyRedmist\speed = 0.0
 								Animate2(EnemyRedmist\obj,AnimTime(EnemyRedmist\obj),206,250,0.05)
-								If FloorTimer(i)=2 Then PlaySound(HorrorSFX(2)) : FloorTimer(i)=3
+								If FloorTimer(i) = 2 Then PlaySound(HorrorSFX(Rand(0, 9))) : FloorTimer(i) = 3
 							Else
 								EnemyRedmist\speed = 0.05
 							EndIf
 							If Distance2(EntityX(EnemyRedmist\collider),EntityY(EnemyRedmist\collider),EntityZ(EnemyRedmist\collider))<0.8 Then
 								KillTimer = max(KillTimer,1)
 									
-								FloorTimer(i)=0
+								FloorTimer(i) = 0
 							EndIf
 							If Distance2(EntityX(EnemyRedmist\collider),EntityY(EnemyRedmist\collider),EntityZ(EnemyRedmist\collider))<1.9 Then
 								EnemyRedmist\speed = 0.1
@@ -3495,9 +3514,9 @@ Function UpdateFloors()
 						FloorTimer(i) = 3
 						EmitSound(StoneSFX, btn3)
 						MoveEntity(door2, 0,1.6,0)
-						CurrEnemy = CreateEnemy(4.0, FloorY+1.0, -11.0, mental3)
-						CurrEnemy\speed = 0.013
-						PlaySound(HorrorSFX(3))
+						CurrEnemy = CreateEnemy(4.0, FloorY+1.0, -11.0, UnknownTextures(Rand(0, 2)))
+						CurrEnemy\speed = 0.018
+						PlaySound(HorrorSFX(Rand(0, 9)))
 					EndIf
 					If FloorTimer(i) > 2 And FloorTimer(i) < 60 Then
 						MoveEntity(btn3, -0.001,0,0)
@@ -3540,8 +3559,7 @@ Function UpdateFloors()
 						If Distance2(EntityX(CurrEnemy\collider),EntityY(CurrEnemy\collider),EntityZ(CurrEnemy\collider))<0.7 Then
 							KillTimer = max(KillTimer,1)
 						EndIf
-					
-					
+
 						If EntityVisible(CurrEnemy\collider, camera) Then
 							CurrEnemy\dorotation = True
 						Else
@@ -3574,7 +3592,7 @@ Function UpdateFloors()
 						If Distance2(EntityX(CurrEnemy\collider),EntityY(CurrEnemy\collider),EntityZ(CurrEnemy\collider)) < 2.0 Then FloorTimer(PlayerFloor) = FloorTimer(PlayerFloor) +1
 					EndIf
 					If FloorTimer(i) = 3 Then
-						PlaySound(HorrorSFX(3))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						PlaySound StoneSFX
 					EndIf
 					If FloorTimer(i) > 2 And FloorTimer(i) < 399 Then
@@ -3586,12 +3604,12 @@ Function UpdateFloors()
 						
 						If FloorTimer(i) = 180 Then
 							If Floor(i/2.0)=Ceil(i/2.0) Then
-								CurrEnemy = CreateEnemy(7.5, FloorY-1.0, -10.5,mental) : CurrEnemy\speed = 0.013
+								CurrEnemy = CreateEnemy(7.5, FloorY-1.0, -10.5,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.013
 							Else
-								CurrEnemy = CreateEnemy(0.5, FloorY-1.0, 3.5,mental) : CurrEnemy\speed = 0.013
+								CurrEnemy = CreateEnemy(0.5, FloorY-1.0, 3.5,MentalTextures(Rand(0, 2))) : CurrEnemy\speed = 0.013
 							EndIf
 							
-							PlaySound(HorrorSFX(1))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 							
 							If Distance2(EntityX(CurrEnemy\collider),EntityY(CurrEnemy\collider),EntityZ(CurrEnemy\collider)) > 3.0 Then
 								CurrEnemy\speed = 0.02
@@ -3613,7 +3631,7 @@ Function UpdateFloors()
 							FloorTimer(i) = FloorTimer(i) + 1
 							PlaySound(RoarSFX)
 							
-							CurrEnemy = CreateEnemy(4.5,FloorY-0.3,-12,mental2)  
+							CurrEnemy = CreateEnemy(4.5,FloorY-0.3,-12,MentalTextures(Rand(0, 2)))  
 							CurrEnemy\speed = 0.00
 							CurrEnemy\dorotation = False
 							CurrEnemy\playerlastseen = True
@@ -3692,7 +3710,7 @@ Function UpdateFloors()
 					
 				Case ACT_ILLUSIONS
 					If i = PlayerFloor And floorTimer(i) > 0 Then
-						If floortimer(i)=2 Then
+						If floortimer(i) = 2 Then
 							EnemyClothwander = CreateEnemy(5.4,FloorY-0.5,0.5,clothwandertex)
 							EnemyClothwander2 = CreateEnemy(5.4,FloorY-0.5,8.5,clothwandertex)
 							EnemyClothwander3 = CreateEnemy(-0.4,FloorY-0.5,8.5,clothwandertex)
@@ -3714,12 +3732,12 @@ Function UpdateFloors()
 							EnemyClothwander4\dorotation = False
 						EndIf
 						
-						If floortimer(i)=124 Then			
+						If floortimer(i) = 124 Then			
 							floortimer(i) = 4
 						EndIf
 						
 						For enemy.ENEMIES = Each ENEMIES
-							If floortimer(i)=123 Then			
+							If floortimer(i) = 123 Then			
 								angle = EntityYaw(enemy\collider) + Rand(-1,1)*90
 								RotateEntity enemy\collider, 0,angle,0
 							EndIf
@@ -3746,7 +3764,7 @@ Function UpdateFloors()
 								KillTimer = max(1,Killtimer)
 							EndIf
 							If dist# < 1.4 And EntityInView(enemy\collider,camera) And ChannelPlaying(SoundChannel) = False Then
-								SoundChannel = PlaySound(HorrorSFX(Rand(1,2)))
+								SoundChannel = PlaySound(HorrorSFX(Rand(0, 9)))
 							EndIf
 						Next
 						
@@ -3767,7 +3785,7 @@ Function UpdateFloors()
 					
 				Case ACT_ILLUSIONS_2
 					If i = PlayerFloor And floorTimer(i) > 0 Then
-						If floortimer(i)=2 Then
+						If floortimer(i) = 2 Then
 							EnemyClothwander = CreateEnemy(5.4,FloorY-0.5,0.5,clothwandertex)
 							EnemyClothwander2 = CreateEnemy(5.4,FloorY-0.5,8.5,clothwandertex)
 							EnemyClothwander3 = CreateEnemy(-0.4,FloorY-0.5,8.5,clothwandertex)
@@ -3789,12 +3807,12 @@ Function UpdateFloors()
 							EnemyClothwander4\dorotation = False
 						EndIf
 						
-						If floortimer(i)=124 Then			
+						If floortimer(i) = 124 Then			
 							floortimer(i) = 4
 						EndIf
 						
 						For enemy.ENEMIES = Each ENEMIES
-							If floortimer(i)=123 Then			
+							If floortimer(i) = 123 Then			
 								angle = EntityYaw(enemy\collider) + Rand(-1,1)*90
 								RotateEntity enemy\collider, 0,angle,0
 							EndIf
@@ -3821,7 +3839,7 @@ Function UpdateFloors()
 								KillTimer = max(1,Killtimer)
 							EndIf
 							If dist# < 1.4 And EntityInView(enemy\collider,camera) And ChannelPlaying(SoundChannel) = False Then
-								SoundChannel = PlaySound(HorrorSFX(Rand(1,2)))
+								SoundChannel = PlaySound(HorrorSFX(Rand(0, 9)))
 							EndIf
 						Next
 						
@@ -3846,7 +3864,7 @@ Function UpdateFloors()
 						If FloorTimer(i) < 201 Then
 							FloorTimer(i) = FloorTimer(i)+1
 						EndIf
-						DebugLog((EntityX(camera))+" "+(EntityY(camera)-FloorY)+" "+(EntityZ(camera)))
+						DebugLog((EntityX(camera))+ " " +(EntityY(camera)-FloorY)+ " " +(EntityZ(camera)))
 						If FloorTimer(i) = 2 Then ;Init
 							AmbientTimer = 1000000
 							platform1 = CreateObject()
@@ -3909,12 +3927,12 @@ Function UpdateFloors()
 						EndIf
 						If FloorTimer(i) = 260 Then ;Button1 end of move
 							DO_ANIMATION = True
-							EnemyMental = CreateEnemy(13, FloorY-2.3, 8.5, mental)
+							EnemyMental = CreateEnemy(13, FloorY-2.3, 8.5, MentalTextures(Rand(0, 2)))
 							EnemyMental\speed = 0.008
-							EnemyRedmist = CreateEnemy(0.5, FloorY-1.5, 9.5, tex173)
+							EnemyRedmist = CreateEnemy(0.5, FloorY-1.5, 9.5, RedmistTextures(Rand(0, 2)))
 							EnemyRedmist\speed = 0.0
 							EntityFX EnemyRedmist\obj,8
-							PlaySound(HorrorSFX(3))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 							FloorTimer(i) = 299
 						EndIf
 						If FloorTimer(i) = 299 Then
@@ -4100,7 +4118,7 @@ Function UpdateFloors()
 				
 				Case ACT_ENDING_2
 					If i <= PlayerFloor And floorTimer(i) > 0 Then
-						If floortimer(i)=1 Then
+						If floortimer(i) = 1 Then
 							AmbientTimer = 1000000
 							EnemyClothwander = CreateEnemy(-2.0,FloorY-0.5,5.5,clothwandertex)
 							EnemyClothwander2 = CreateEnemy(-2.0,FloorY-0.5,2.0,clothwandertex)
@@ -4214,7 +4232,7 @@ Function UpdateFloors()
 									KillTimer = max(1,Killtimer)
 								EndIf
 								If dist# < 1.4 And EntityInView(enemy\collider,camera) And ChannelPlaying(SoundChannel) = False Then
-									SoundChannel = PlaySound(HorrorSFX(Rand(1,2)))
+									SoundChannel = PlaySound(HorrorSFX(Rand(0, 9)))
 								EndIf
 							Next
 						EndIf
@@ -4264,12 +4282,12 @@ Function UpdateFloors()
 							If floorTimer(i) = 2920 Then
 								BlurTimer = 150
 								DO_ANIMATION = True
-								EnemyMental = CreateEnemy(EntityX(collider), EntityY(collider), EntityZ(collider)+1.2, mental)
+								EnemyMental = CreateEnemy(EntityX(collider), EntityY(collider), EntityZ(collider)+1.2, MentalTextures(Rand(0, 2)))
 								EnemyMental\speed = 0.007
 								EnemyMental\dorotation = False
 								RotateEntity EnemyMental\collider,0,0,0
 								
-								CurrEnemy = CreateEnemy(4.5, EntityY(collider), 21, unknowntex)
+								CurrEnemy = CreateEnemy(4.5, EntityY(collider), 21, UnknownTextures(Rand(0, 2)))
 								CurrEnemy\dorotation = False
 								CurrEnemy\speed = 0.01
 								RotateEntity CurrEnemy\collider,0,180,0
@@ -4439,12 +4457,12 @@ Function UpdateFloors()
 				If FloorTimer(PlayerFloor)=150 Then
 					PlaySound RadioSFX(3)	;M?RK?ILY?	
 					FloorTimer(PlayerFloor)=0
-					CurrEnemy = CreateEnemy(startx-0.5, FloorY-0.5, FloorZ,unknownTex)
+					CurrEnemy = CreateEnemy(startx-0.5, FloorY-0.5, FloorZ,UnknownTextures(Rand(0, 2)))
 					CurrEnemy\speed = 0.01
 					CurrEnemy\dorotation = true
 					RotateEntity(CurrEnemy\collider,0,180,0)
 					EntityFX(CurrEnemy\obj,8)
-					PlaySound(HorrorSFX(5))
+					PlaySound(HorrorSFX(Rand(0, 9)))
 				ElseIf FloorTimer(PlayerFloor) > 0 Then
 					FreeEntity CurrEnemy\collider
 					FreeEntity CurrEnemy\obj
@@ -4495,20 +4513,20 @@ Function UpdateFloors()
 				DO_ANIMATION = False
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Distance2(EndX, FloorY, FloorZ)<1.5 Then
-						CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ,mental)
-						PlaySound(HorrorSFX(Rand(0,2)))
+						CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2)))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						FloorTimer(PlayerFloor) = 5
 					EndIf
 				ElseIf FloorTimer(PlayerFloor)= 2
 					If Distance2(FloorX, FloorY, FloorZ)<1.5 Then
-						CurrEnemy = CreateEnemy(FloorX, FloorY-0.5, FloorZ,mental2)
-						PlaySound(HorrorSFX(Rand(0,2)))
+						CurrEnemy = CreateEnemy(FloorX, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2)))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						FloorTimer(PlayerFloor) = 5
 					EndIf
 				ElseIf FloorTimer(PlayerFloor)= 3
 					If Distance2(startX, FloorY, FloorZ)<1.5 Then
-						CurrEnemy = CreateEnemy(startX, FloorY-0.5, FloorZ,mental3)
-						PlaySound(HorrorSFX(Rand(0,2)))
+						CurrEnemy = CreateEnemy(startX, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2)))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						FloorTimer(PlayerFloor) = 5
 					EndIf	
 				Else
@@ -4537,12 +4555,12 @@ Function UpdateFloors()
 				If FloorTimer(PlayerFloor) = 1 Then
 					If Distance2(5, FloorY, -13) < 1.0 Then
 						FloorTimer(PlayerFloor) = 2
-						CurrEnemy = CreateEnemy(-0.5, FloorY-0.5, -11.5,unknownTex)
+						CurrEnemy = CreateEnemy(-0.5, FloorY-0.5, -11.5,UnknownTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.15
 						CurrEnemy\dorotation = False
 						RotateEntity(CurrEnemy\collider,0,180,0)
 						EntityFX(CurrEnemy\obj,8)
-						PlaySound(HorrorSFX(5))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 					EndIf
 				EndIf
 				If FloorTimer(PlayerFloor) > 1 Then
@@ -4558,7 +4576,7 @@ Function UpdateFloors()
 			Case ACT_LIGHTS
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Distance2(FloorX, FloorY, FloorZ)<1.0 Then
-						PlaySound(HorrorSFX(1))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						PlaySound(FireOff)
 						FloorTimer(PlayerFloor) = 2
 						AmbientLight Max(BRIGHTNESS*0.25,0),Max(BRIGHTNESS*0.25,0),Max(BRIGHTNESS*0.25,0)
@@ -4593,7 +4611,7 @@ Function UpdateFloors()
 			Case ACT_RUN
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Distance2(FloorX-1.0, FloorY, FloorZ)<1.0 Then
-						PlaySound(HorrorSFX(1))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						PlaySound(FireOff)
 						FloorTimer(PlayerFloor) = 2
 						AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
@@ -4602,7 +4620,7 @@ Function UpdateFloors()
 			Case ACT_RUN_4
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Distance2(FloorX-1.0, FloorY, FloorZ)<1.0 Then
-						PlaySound(HorrorSFX(1))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						PlaySound(FireOff)
 						FloorTimer(PlayerFloor) = 2
 						AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
@@ -4611,7 +4629,7 @@ Function UpdateFloors()
 			Case ACT_RUN_2
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Distance2(startX, FloorY, FloorZ-5.0)<1.0 Or Distance2(startX, FloorY, FloorZ+5.0)<1.0 Then
-						PlaySound(HorrorSFX(1))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						PlaySound(FireOff)
 						FloorTimer(PlayerFloor) = 2
 						AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
@@ -4620,7 +4638,7 @@ Function UpdateFloors()
 			Case ACT_RUN_3
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Distance2(startX, FloorY, FloorZ-5.0)<1.0 Or Distance2(startX, FloorY, FloorZ+5.0)<1.0 Then
-						PlaySound(HorrorSFX(1))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						PlaySound(FireOff)
 						FloorTimer(PlayerFloor) = 2
 						AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
@@ -4631,7 +4649,7 @@ Function UpdateFloors()
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
 						EnemyRedmist = CreateEnemy(startx-1.8,FloorY-0.5,FloorZ-6.0,tex1732)  
 					Else ;pariton
-						EnemyRedmist = CreateEnemy(startx+1.8,FloorY-0.5,FloorZ+6.0,tex173)  
+						EnemyRedmist = CreateEnemy(startx+1.8,FloorY-0.5,FloorZ+6.0,RedmistTextures(Rand(0, 2)))  
 					EndIf
 					EntityFX EnemyRedmist\obj, 8
 					EnemyRedmist\speed = 0.0
@@ -4640,7 +4658,7 @@ Function UpdateFloors()
 			Case ACT_173_2
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
-						EnemyRedmist = CreateEnemy(2.5,FloorY-0.5,-12.5,tex173)	
+						EnemyRedmist = CreateEnemy(2.5,FloorY-0.5,-12.5,RedmistTextures(Rand(0, 2)))	
 					Else ;pariton
 						EnemyRedmist = CreateEnemy(5.5,FloorY-0.5,5.55,tex1732)   
 					EndIf
@@ -4707,21 +4725,21 @@ Function UpdateFloors()
 					If floorTimer(PlayerFloor) = 1100 Then PlaySound(GoRightSFX(2))
 					
 					If Distance2(6.4,EntityY(collider),-11.5) < 2.0 And FloorTimer(PlayerFloor) < 2000 Then
-						EnemyRedmist = CreateEnemy(6.5,FloorY-0.5,-12.5,tex173)	
+						EnemyRedmist = CreateEnemy(6.5,FloorY-0.5,-12.5,RedmistTextures(Rand(0, 2)))	
 						EnemyRedmist\speed = 0.015
-						CurrEnemy = CreateEnemy(7.5,FloorY, -3.5, mental)
+						CurrEnemy = CreateEnemy(7.5,FloorY, -3.5, MentalTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.015
-						PlaySound(HorrorSFX(0))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						
 						FloorTimer(PlayerFloor) = 4000
 					EndIf
 					
 					If FloorTimer(PlayerFloor) = 2000 Then
-						EnemyRedmist = CreateEnemy(6.5,FloorY-0.5,-12.5,tex173)	
+						EnemyRedmist = CreateEnemy(6.5,FloorY-0.5,-12.5,RedmistTextures(Rand(0, 2)))	
 						EnemyRedmist\speed = 0.015
-						CurrEnemy = CreateEnemy(7.5,FloorY, -3.5, mental)
+						CurrEnemy = CreateEnemy(7.5,FloorY, -3.5, MentalTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.015
-						PlaySound(HorrorSFX(1))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 					EndIf
 					
 					If FloorTimer(PlayerFloor) = 2400 Then
@@ -4763,9 +4781,9 @@ Function UpdateFloors()
 				DO_ANIMATION = False
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
-						CurrEnemy = CreateEnemy(startx-4.5,FloorY-0.5,FloorZ+3.2,tex173)  
+						CurrEnemy = CreateEnemy(startx-4.5,FloorY-0.5,FloorZ+3.2,RedmistTextures(Rand(0, 2)))  
 					Else ;pariton
-						CurrEnemy = CreateEnemy(startx+4.5,FloorY-0.5,FloorZ-3.2,tex173)  
+						CurrEnemy = CreateEnemy(startx+4.5,FloorY-0.5,FloorZ-3.2,RedmistTextures(Rand(0, 2)))  
 					EndIf
 					EntityFX CurrEnemy\obj, 8
 					CurrEnemy\speed = 0.0
@@ -4784,7 +4802,7 @@ Function UpdateFloors()
 								CurrEnemy\speed = 0.02
 								KillTimer = max(KillTimer,1)
 							Else
-								If CurrEnemy\speed = 0 Then PlaySound (HorrorSFX(2))
+								If CurrEnemy\speed = 0 Then PlaySound(HorrorSFX(Rand(0, 9)))
 								SetAnimTime(CurrEnemy\obj, 0)
 								EntityType CurrEnemy\collider,hit_map
 								MoveEntity CurrEnemy\collider, 0, 0, 1.75
@@ -4806,9 +4824,9 @@ Function UpdateFloors()
 				DO_ANIMATION = False
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
-						CurrEnemy = CreateEnemy(5,FloorY-0.5,-10.5,tex173)  
+						CurrEnemy = CreateEnemy(5,FloorY-0.5,-10.5,RedmistTextures(Rand(0, 2)))  
 					Else ;pariton
-						CurrEnemy = CreateEnemy(3,FloorY-0.5,3.5,tex173)  
+						CurrEnemy = CreateEnemy(3,FloorY-0.5,3.5,RedmistTextures(Rand(0, 2)))  
 					EndIf
 					EntityFX CurrEnemy\obj, 8
 					CurrEnemy\speed = 0.0
@@ -4820,7 +4838,7 @@ Function UpdateFloors()
 						;Animate2(CurrEnemy\obj,AnimTime(CurrEnemy\obj),206,250,0.05)
 						If Abs(EntityX(camera)-EntityX(CurrEnemy\collider))<0.05 And Rand(300)=1 Then
 							If FloorTimer(PlayerFloor) < 3000 Then
-								If CurrEnemy\speed = 0 Then PlaySound (HorrorSFX(2))
+								If CurrEnemy\speed = 0 Then PlaySound(HorrorSFX(Rand(0, 9)))
 								SetAnimTime(CurrEnemy\obj, 0)
 								EntityType CurrEnemy\collider,hit_map
 								MoveEntity CurrEnemy\collider, 0, 0, 1.25
@@ -4907,11 +4925,11 @@ Function UpdateFloors()
 				If FloorTimer(PlayerFloor)=1 Then 
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
 						If Distance2(startx-1.5,FloorY-0.5,FloorZ-5.0)<0.25 Then
-							CurrEnemy = CreateEnemy(startx-1.5,FloorY-0.5,FloorZ-2.0,tex173)  
+							CurrEnemy = CreateEnemy(startx-1.5,FloorY-0.5,FloorZ-2.0,RedmistTextures(Rand(0, 2)))  
 							CurrEnemy\speed = 0.01
 							EntityFX CurrEnemy\obj, 8
 							FloorTimer(PlayerFloor)=2
-							PlaySound(HorrorSFX(2))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 					Else ;pariton
 						If	Distance2(startx+1.5,FloorY-0.5,FloorZ+5.0)<0.25 Then
@@ -4919,7 +4937,7 @@ Function UpdateFloors()
 							CurrEnemy\speed = 0.01
 							EntityFX CurrEnemy\obj, 8
 							FloorTimer(PlayerFloor)=2
-							PlaySound(HorrorSFX(2))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 					EndIf
 				Else
@@ -4931,19 +4949,19 @@ Function UpdateFloors()
 				If FloorTimer(PlayerFloor)=1 Then 	
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
 						If	Distance2(startx+0.5,FloorY-0.5,FloorZ-5.0)<0.25 Then
-							CurrEnemy = CreateEnemy(startx+0.5,FloorY-0.5,FloorZ-2.0,tex173)  
+							CurrEnemy = CreateEnemy(startx+0.5,FloorY-0.5,FloorZ-2.0,RedmistTextures(Rand(0, 2)))  
 							CurrEnemy\speed = 0.01
 							EntityFX CurrEnemy\obj, 8
 							FloorTimer(PlayerFloor)=2
-							PlaySound(HorrorSFX(2))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 					Else ;pariton
 						If Distance2(startx-0.5,FloorY-0.5,FloorZ+5.0)<0.25 Then
-							CurrEnemy = CreateEnemy(startx-0.5,FloorY-0.5,FloorZ+2.0,tex173)  
+							CurrEnemy = CreateEnemy(startx-0.5,FloorY-0.5,FloorZ+2.0,RedmistTextures(Rand(0, 2)))  
 							CurrEnemy\speed = 0.01
 							EntityFX CurrEnemy\obj, 8
 							FloorTimer(PlayerFloor)=2
-							PlaySound(HorrorSFX(2))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 					EndIf		
 				Else
@@ -4964,14 +4982,14 @@ Function UpdateFloors()
 					If	Distance2(1.5,FloorY-0.5,3.8)<0.5
 						EnemyClothWander = CreateEnemy(1.0,FloorY-0.5,2.0,clothwandertex)  
 						EnemyClothWander\speed = 0.01
-						PlaySound(HorrorSFX(2))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						floorTimer(PlayerFloor) = 3
 					EndIf	
 					If	Distance2(-0.5,FloorY-0.5,3.8)<0.5
 						FloorTimer(PlayerFloor) = FloorTimer(PlayerFloor) + 1
 						EnemyClothWander = CreateEnemy(-0.7,FloorY-0.5,2.0,clothwandertex)  
 						EnemyClothWander\speed = 0.01
-						PlaySound(HorrorSFX(2))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						floorTimer(PlayerFloor) = 3
 					EndIf
 				EndIf
@@ -5006,9 +5024,9 @@ Function UpdateFloors()
 					FloorTimer(PlayerFloor)= 2
 				ElseIf FloorTimer(PlayerFloor)=2
 					If Distance2(FloorX, FloorY, FloorZ)<1.0 Then	
-						CurrEnemy = CreateEnemy(startX, FloorY-0.5, FloorZ,mental)
+						CurrEnemy = CreateEnemy(startX, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.01
-						PlaySound(HorrorSFX(Rand(0,2)))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						FloorTimer(PlayerFloor) = 3
 					EndIf
 				EndIf
@@ -5040,11 +5058,11 @@ Function UpdateFloors()
 					ScaleEntity(CurrObject, 0.5,0.5,0.1)
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen
 						PositionEntity (CurrObject, StartX-0.5, FloorY-0.5, FloorZ-1.6)
-						CurrEnemy = CreateEnemy(StartX-0.5, FloorY-0.5, FloorZ-2,mental2)
+						CurrEnemy = CreateEnemy(StartX-0.5, FloorY-0.5, FloorZ-2,MentalTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.0
 					Else ;pariton
 						PositionEntity (CurrObject, StartX+0.5, FloorY-0.5, FloorZ+1.6)	
-						CurrEnemy = CreateEnemy(StartX+0.5, FloorY-0.5, FloorZ+2,mental)
+						CurrEnemy = CreateEnemy(StartX+0.5, FloorY-0.5, FloorZ+2,MentalTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.0
 					EndIf
 					brick = LoadTexture("GFX\brickwall.jpg")
@@ -5059,7 +5077,7 @@ Function UpdateFloors()
 				DO_ANIMATION = True
 				If FloorTimer(PlayerFloor)= 1 And (Distance2(startx-6.0, FloorY - 0.5, FloorZ-2.0) < 2.0 Or Distance2(startx+6.0, FloorY - 0.5, FloorZ+2.0) < 2.0) Then
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
-						CurrEnemy = CreateEnemy(StartX-2.5,FloorY-0.5,FloorZ-3.0,tex173)  
+						CurrEnemy = CreateEnemy(StartX-2.5,FloorY-0.5,FloorZ-3.0,RedmistTextures(Rand(0, 2)))  
 					Else ;pariton
 						CurrEnemy = CreateEnemy(StartX+2.5,FloorY-0.5,FloorZ+3.0,tex1732)  
 					EndIf
@@ -5090,10 +5108,10 @@ Function UpdateFloors()
 				DO_ANIMATION = True
 				If FloorTimer(PlayerFloor)= 1 Then
 					If Distance2(FloorX, FloorY, FloorZ)<2.0 Then
-						CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ, tex173)
+						CurrEnemy = CreateEnemy(EndX, FloorY-0.5, FloorZ, RedmistTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.1
 						EntityFX CurrEnemy\obj,8
-						PlaySound(HorrorSFX(Rand(0,2)))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						FloorTimer(PlayerFloor) = 2
 					EndIf
 				EndIf
@@ -5116,19 +5134,19 @@ Function UpdateFloors()
 							FreeEntity CurrEnemy\obj
 							Delete CurrEnemy								
 							FloorTimer(PlayerFloor)=0
-							PlaySound(HorrorSFX(Rand(0,2)))
+							PlaySound(HorrorSFX(Rand(0, 9)))
 						EndIf
 					Else
 						If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then
 							If EntityX(collider) < 5.7 And EntityX(collider) > 5.0 And EntityZ(collider) > -10.2 And EntityZ(collider) < -9.6 Then
-								CurrEnemy = CreateEnemy(2, FloorY-0.5, -11.5, tex173)
+								CurrEnemy = CreateEnemy(2, FloorY-0.5, -11.5, RedmistTextures(Rand(0, 2)))
 								CurrEnemy\speed = 0.05
 								EntityFX CurrEnemy\obj,8
 								FloorTimer(PlayerFloor) = 2
 							EndIf
 						Else
 							If EntityX(collider) < 2.8 And EntityX(collider) > 2.2 And EntityZ(collider) > 2.6 And EntityZ(collider) < 2.9 Then
-								CurrEnemy = CreateEnemy(5.5, FloorY-0.5, 4.4, tex173)
+								CurrEnemy = CreateEnemy(5.5, FloorY-0.5, 4.4, RedmistTextures(Rand(0, 2)))
 								CurrEnemy\speed = 0.05
 								EntityFX CurrEnemy\obj,8
 								FloorTimer(PlayerFloor) = 2
@@ -5168,9 +5186,9 @@ Function UpdateFloors()
 					AmbientLight temp,temp,temp
 					
 					If FloorTimer(PlayerFloor) = 600 Then
-						CurrEnemy = CreateEnemy(FloorX, FloorY-0.5, FloorZ,mental)
+						CurrEnemy = CreateEnemy(FloorX, FloorY-0.5, FloorZ,MentalTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.01
-						PlaySound(HorrorSFX(Rand(0,2)))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 						FloorTimer(PlayerFloor) = 601
 					EndIf
 				Else
@@ -5183,9 +5201,9 @@ Function UpdateFloors()
 				If FloorTimer(PlayerFloor)= 1 Then
 					DO_ANIMATION = True
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then ;parillinen 
-						CurrEnemy = CreateEnemy(1.55,FloorY+0.8,-15.45,eyekiller)
+						CurrEnemy = CreateEnemy(1.55,FloorY+0.8,-15.45,EyekillerTextures(Rand(0, 2)))
 					Else ;pariton
-						CurrEnemy = CreateEnemy(1.55,FloorY+0.8,-15.45,eyekiller)
+						CurrEnemy = CreateEnemy(1.55,FloorY+0.8,-15.45,EyekillerTextures(Rand(0, 2)))
 					EndIf
 					EntityFX CurrEnemy\obj, 8
 					CurrEnemy\speed = 0.0
@@ -5212,7 +5230,7 @@ Function UpdateFloors()
 					ChannelVolume SoundChannel, max(0.0,1.0-(Distance2(EntityX(Radio),EntityY(Radio),EntityZ(Radio))/8.0))
 					
 					If Distance2(EntityX(Radio),EntityY(Radio),EntityZ(Radio)) < 1.5 And FloorTimer(PlayerFloor) = 2 Then
-						CurrEnemy = CreateEnemy(3.0,FloorY+0.8,-18.5,tex173)
+						CurrEnemy = CreateEnemy(3.0,FloorY+0.8,-18.5,RedmistTextures(Rand(0, 2)))
 						EntityFX CurrEnemy\obj, 8
 						CurrEnemy\speed = 0.0
 						FloorTimer(PlayerFloor) = 3
@@ -5222,15 +5240,15 @@ Function UpdateFloors()
 				DO_ANIMATION = True
 				If FloorTimer(PlayerFloor) = 1 Then
 					If Floor(PlayerFloor/2.0)=Ceil(PlayerFloor/2.0) Then
-						CurrEnemy = CreateEnemy(10.5,FloorY-0.5,-17.5,mental)
+						CurrEnemy = CreateEnemy(10.5,FloorY-0.5,-17.5,MentalTextures(Rand(0, 2)))
 					Else
-						CurrEnemy = CreateEnemy(-2.5,FloorY-0.5,11.5,mental)
+						CurrEnemy = CreateEnemy(-2.5,FloorY-0.5,11.5,MentalTextures(Rand(0, 2)))
 					EndIf
 					CurrEnemy\speed = 0.02
 					FloorTimer(PlayerFloor)=2
 				EndIf
 				If FloorTimer(PlayerFloor) = 2 And EntityInView(CurrEnemy\collider, camera) And Distance2(EntityX(CurrEnemy\collider),EntityY(CurrEnemy\collider),EntityZ(CurrEnemy\collider)) < 3.0 Then
-					PlaySound(HorrorSFX(Rand(0,2)))
+					PlaySound(HorrorSFX(Rand(0, 9)))
 					FloorTimer(PlayerFloor)=3
 				EndIf
 				
@@ -5294,7 +5312,7 @@ Function UpdateFloors()
 					
 					If FloorTimer(PlayerFloor) = 100 Then PlaySound(WaitSFX)
 					If FloorTimer(PlayerFloor) = 200 Then
-						CurrEnemy = CreateEnemy(startx,FloorY-0.5,FloorZ,mental)
+						CurrEnemy = CreateEnemy(startx,FloorY-0.5,FloorZ,MentalTextures(Rand(0, 2)))
 						CurrEnemy\speed = 0.05
 					EndIf
 					If FloorTimer(PlayerFloor) = 300 Then DO_ANIMATION = False : CurrEnemy\speed = 0.00
@@ -5310,7 +5328,7 @@ Function UpdateFloors()
 						EndIf
 						PositionEntity wall,0,10,0
 						CurrEnemy\speed = 0.01
-						PlaySound(HorrorSFX(0))
+						PlaySound(HorrorSFX(Rand(0, 9)))
 					EndIf
 					If FloorTimer(PlayerFloor) = 470 Then
 						FloorTimer(PlayerFloor) = 0
@@ -5330,7 +5348,7 @@ Function UpdateFloors()
 			Case ACT_HALLWAYTRAP
 				DO_ANIMATION = True
 				If Floortimer(PlayerFloor) = 1 And Distance2(4.5, FloorY, -7.5)<1.0 Then
-					PlaySound(HorrorSFX(4))
+					PlaySound(HorrorSFX(Rand(0, 9)))
 					EnemyClothWander = CreateEnemy(7.5,FloorY-0.5,-7.5,clothwandertex)
 					EnemyClothWander\speed = 0.012
 					EnemyClothWander2 = CreateEnemy(0.5,FloorY-0.5,-7.5,clothwandertex)
@@ -5852,7 +5870,7 @@ Function Download(link$, savepath$ = "", savefile$ = "")
 	
 	If savepath <> "" Then
 		If Right(savepath,1)<>"/" And Right(savepath,1)<>"\" Then
-			savepath=savepath+"/"
+			savepath=savepath+ "/"
 		EndIf
 		If FileType(Left(savepath,Len(savepath)-1))=0 Then
 			CreateDir(savepath)
@@ -5903,7 +5921,7 @@ Function Download(link$, savepath$ = "", savefile$ = "")
 						
 						If timer Mod 10 = 0 Then
 							Cls
-							Text 320,250,"Downloading ["+Int(Float(conlen-avail)/Float(conlen)*100)+"%]",True,True
+							Text 320,250,"Downloading [" +Int(Float(conlen-avail)/Float(conlen)*100)+ "%]",True,True
 							Flip
 						EndIf
 						timer = timer + 1

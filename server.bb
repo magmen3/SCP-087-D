@@ -29,7 +29,7 @@ Dim FloorTimer(flooramount)
 Global isFlying% = False
 Global UpdateTimer = 0
 ;Global ChatLogFile
-Dim HorrorSFX(4)
+Dim HorrorSFX(9)
 
 Global ID = 0
 Const UDP_FREQUENCY = 20
@@ -132,7 +132,7 @@ Function ConnectToServer%(Addr$="")
 	If (Not Server) Then
 		PlayState = GAME_SOLO
 	Else
-		WriteLine Server,"connected"+GAME_VERSION
+		WriteLine Server,"connected" +GAME_VERSION
 		WriteByte Server,0
 		WriteLine Server,PlayerName
 		CountHostIPs(Addr) ;get host ips from server
@@ -151,7 +151,7 @@ Function ConnectToServer%(Addr$="")
 			Delay 100
 			ticks = ticks + 1
 			If MilliSecs()>prevSendTime+3000 Then
-				WriteLine Server,"connected"+GAME_VERSION
+				WriteLine Server,"connected" +GAME_VERSION
 				WriteByte Server,0
 				WriteLine Server,PlayerName
 				SendUDPMsg(Server,HostIP(1),8730)
@@ -184,7 +184,7 @@ Function ConnectToServer%(Addr$="")
 				
 				Color 255,255,255
 				If Mid(MapString,1,7) = "version" Then
-					Text xcenter,ycenter,"The server runs on version " + Mid(MapString,8,Len(MapString)-7)+"."
+					Text xcenter,ycenter,"The server runs on version " + Mid(MapString,8,Len(MapString)-7)+ "."
 				ElseIf MapString = "KICK" Then
 					Text xcenter,ycenter,"You have been kicked from the server."
 				EndIf
@@ -200,7 +200,7 @@ Function ConnectToServer%(Addr$="")
 		ticks = 0
 		Local map$ = "0"
 		While map <> "1"
-			WriteLine Server,"map"+MapString
+			WriteLine Server,"map" +MapString
 			WriteByte Server,0
 			WriteLine Server,PlayerName
 			SendUDPMsg(Server,Players(0)\IP,Players(0)\Port)
@@ -619,7 +619,7 @@ Function UpdateServer()
 	;Scare
 	
 	If MouseHit2 And SpookCount > 0 And VisibilityTimer < 0 And PlayingAs <> PLAYER_CLASSD Then
-		AddChatMsg("You will be able to scare in " + ((SCARE_COOLDOWN+VisibilityTimer)/60)+" seconds.",150,50,50,ID,False)
+		AddChatMsg("You will be able to scare in " + ((SCARE_COOLDOWN+VisibilityTimer)/60)+ " seconds.",150,50,50,ID,False)
 		MouseHit2 = False
 	EndIf
 
@@ -754,7 +754,7 @@ Function UpdateServer()
 				FreeEntity GetChild(Players(temp)\Pivot,1)
 				FreeEntity Players(temp)\Pivot
 				PlayerCount=PlayerCount-1
-				AddChatMsg(Players(temp)\Name+" has been kicked by " + Players(PlayerID)\Name+".",255,0,0,PlayerID,True)
+				AddChatMsg(Players(temp)\Name+ " has been kicked by " + Players(PlayerID)\Name+ ".",255,0,0,PlayerID,True)
 				Players(temp)=Null
 				Delete Players(temp)
 			EndIf
@@ -847,7 +847,7 @@ Function UpdateServer()
 					SendUDPMsg Server,getconn,UDPMsgPort(Server) ;tell the client to disconnect
 				EndIf
 			ElseIf Mid(TempRead,1,9)="connected" Then ;client has got another version of the game
-				WriteLine(Server,"version"+GAME_VERSION)
+				WriteLine(Server,"version" +GAME_VERSION)
 				WriteByte(Server,giveID)
 				SendUDPMsg(Server,getconn,UDPMsgPort(Server))
 			Else If TempRead="disconnect" Then ;player has "cleanly" disconnected
@@ -857,7 +857,7 @@ Function UpdateServer()
 						FreeEntity GetChild(Players(TempID)\Pivot,1)
 						FreeEntity Players(TempID)\Pivot
 						PlayerCount=PlayerCount-1
-						AddChatMsg(Players(TempID)\Name+" has disconnected.",255,255,0,TempID,True)
+						AddChatMsg(Players(TempID)\Name+ " has disconnected.",255,255,0,TempID,True)
 						Players(TempID)=Null
 						Delete Players(TempID)
 					EndIf
@@ -866,7 +866,7 @@ Function UpdateServer()
 				If Players(TempID)<>Null Then ;player exists
 					If Players(TempID)\IP = getconn Then
 						If Players(TempID)\Connected = False Then
-							AddChatMsg(Players(TempID)\Name+" has joined the server.",255,255,0,TempID,True)
+							AddChatMsg(Players(TempID)\Name+ " has joined the server.",255,255,0,TempID,True)
 						EndIf
 						Players(TempID)\Connected = True
 						Local newMsg%=ReadInt(Server)
@@ -887,9 +887,9 @@ Function UpdateServer()
 								Players(TempID)\LastChatMsgID = chatID
 								If Len(chatMsg)>0 Then
 									If Players(TempID)\PlayingAs=PLAYER_CLASSD Then
-										AddChatMsg(Players(TempID)\Name+": "+chatMsg,50,70,255,TempID,False)
+										AddChatMsg(Players(TempID)\Name+ ": " +chatMsg,50,70,255,TempID,False)
 									Else
-										AddChatMsg(Players(TempID)\Name+": "+chatMsg,150,0,0,TempID,True)
+										AddChatMsg(Players(TempID)\Name+ ": " +chatMsg,150,0,0,TempID,True)
 									EndIf
 								EndIf
 							EndIf
@@ -1078,9 +1078,9 @@ Function UpdateServer()
 													While vYawa>=180.0
 														vYawa=vYawa-360.0
 													Wend
-													;DebugLog "ANGLE "+Abs(vYaw)
+													;DebugLog "ANGLE " +Abs(vYaw)
 													If EntityDistance(Players(j)\Pivot,Players(i)\Pivot)<0.8 And Abs(vYawa)<45 Then
-														If Players(j)\KillTimer<=0 Then AddChatMsg(Players(i)\Name+" killed "+Players(j)\Name+"!",255,100,0,i,True)
+														If Players(j)\KillTimer<=0 Then AddChatMsg(Players(i)\Name+ " killed " +Players(j)\Name+ "!",255,100,0,i,True)
 														Players(j)\KillTimer = max(Players(j)\KillTimer,1)
 													EndIf
 												EndIf
@@ -1099,7 +1099,7 @@ Function UpdateServer()
 											Wend
 											If EntityDistance(collider,Players(i)\Pivot)<0.8 And Abs(vYawb)<45 And KillTimer<=0 Then
 												KillTimer = max(KillTimer,1)
-												AddChatMsg(Players(i)\Name+" killed "+PlayerName+"!",255,100,0,i,True)
+												AddChatMsg(Players(i)\Name+ " killed " +PlayerName+ "!",255,100,0,i,True)
 											EndIf
 										EndIf
 									EndIf
@@ -1239,7 +1239,7 @@ Function UpdateServer()
 								
 							If Players(i)\FallSpeed < -0.18 And EntityY(Players(i)\Pivot,True)<-1 And Players(i)\PlayingAs = PLAYER_CLASSD Then
 								Players(i)\KillTimer=max(1,Players(i)\KillTimer)
-								AddChatMsg(Players(i)\Name+" fell to their death!",255,0,0,i,True)
+								AddChatMsg(Players(i)\Name+ " fell to their death!",255,0,0,i,True)
 								Players(i)\FallSpeed = 0
 							EndIf
 							
@@ -1255,7 +1255,7 @@ Function UpdateServer()
 							If isFloor = True Then
 								If Players(i)\FallSpeed < -0.09 And EntityY(Players(i)\Pivot)<-1 And Players(i)\PlayingAs = PLAYER_CLASSD Then
 									Players(i)\KillTimer=max(1,Players(i)\KillTimer)
-									AddChatMsg(Players(i)\Name+" fell to their death!",255,0,0,i,True)
+									AddChatMsg(Players(i)\Name+ " fell to their death!",255,0,0,i,True)
 								EndIf
 								Players(i)\FallSpeed = 0
 							Else
@@ -1271,19 +1271,19 @@ Function UpdateServer()
 						;Acts
 								dist# = Distance2(EntityX(Players(i)\Pivot),EntityY(Players(i)\Pivot),EntityZ(Players(i)\Pivot))
 								If Players(i)\Act = ACT_FLASH And Players(i)\VisibilityTimer > 0 And dist < 4.0 Then
-									If Players(i)\VisibilityTimer = 30 Then PlaySound(HorrorSFX(Rand(0,2)))
+									If Players(i)\VisibilityTimer = 30 Then PlaySound(HorrorSFX(Rand(0, 9)))
 									AmbientLight 255,255,255
 									If Players(i)\VisibilityTimer = 1 Then UpdateLights()
 								EndIf
 								
 								If Players(i)\Act = ACT_FLASH_2 And Players(i)\VisibilityTimer > 0 And dist < 8.0 Then
-									If Players(i)\VisibilityTimer = 60 Then PlaySound(HorrorSFX(Rand(0,2)))
+									If Players(i)\VisibilityTimer = 60 Then PlaySound(HorrorSFX(Rand(0, 9)))
 									EntityFX GetChild(Players(i)\Pivot,1),8
 									If Players(i)\VisibilityTimer = 1 Then  EntityFX GetChild(Players(i)\Pivot,1),0
 								EndIf
 								
 								If Players(i)\Act = ACT_WALK And Players(i)\VisibilityTimer > 0 And dist < 8.0 Then
-									If Players(i)\VisibilityTimer = 300 Then PlaySound(HorrorSFX(1))
+									If Players(i)\VisibilityTimer = 300 Then PlaySound(HorrorSFX(Rand(0, 9)))
 									AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 									
 									If Players(i)\VisibilityTimer = 1 Then UpdateLights()
@@ -1293,13 +1293,13 @@ Function UpdateServer()
 									Local temptimer = Players(i)\VisibilityTimer
 									
 									If temptimer  = 360 Or temptimer = 240 Or temptimer = 120 Then
-										If temptimer = 360 Then PlaySound(HorrorSFX(1))
+										If temptimer = 360 Then PlaySound(HorrorSFX(Rand(0, 9)))
 										CameraFogRange camera, 1, 5.4
 										AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 									EndIf
 									
 									If temptimer = 300 Or temptimer = 170 Or temptimer = 50 Then
-										If temptimer = 300 Then PlaySound(HorrorSFX(0))
+										If temptimer = 300 Then PlaySound(HorrorSFX(Rand(0, 9)))
 										CameraFogRange camera, 1, 10
 										AmbientLight 255,255,255
 									EndIf
@@ -1383,10 +1383,10 @@ Function UpdateServer()
 					If (MilliSecs()-Players(i)\LastMsgTime>AUTO_DISCONNECT_TIME) Then ;remove client after X seconds of inactivity: assume connection was unexpectedly lost
 						FreeEntity GetChild(Players(i)\Pivot,1)
 						FreeEntity Players(i)\Pivot
-						AddChatMsg(Players(i)\Name+" timed out.",255,0,0,i,True)
+						AddChatMsg(Players(i)\Name+ " timed out.",255,0,0,i,True)
 						PlayerCount=PlayerCount-1
 						Delete Players(i)
-						Players(i)=Null
+						Players(i) = Null
 					Else
 						PositionEntity GetChild(Players(i)\Pivot,1),EntityX(Players(i)\Pivot,True),EntityY(Players(i)\Pivot,True),EntityZ(Players(i)\Pivot,True),True
 						ScaleEntity GetChild(Players(i)\Pivot,1),0.15,0.15,0.15,True
@@ -1417,7 +1417,7 @@ Function UpdateServer()
 				For i=0 To 31
 					ttmp% = ReadByte(Server)
 
-					;DebugLog "ttmp "+(ttmp-1)
+					;DebugLog "ttmp " +(ttmp-1)
 					If ttmp Then
 						PlayerCount = PlayerCount + 1
 						Players(ttmp-1)\Connected = True
@@ -1569,7 +1569,7 @@ Function UpdateServer()
 								If (Not FloatEquals(MemX[bbb],posx)) Or (Not FloatEquals(MemZ[bbb],posz)) Then
 									PositionEntity collider,posx,posy,posz
 									ResetEntity collider
-									;DebugLog "Correction! "+(SentMsgID-lastClientMsg)
+									;DebugLog "Correction! " +(SentMsgID-lastClientMsg)
 								EndIf
 								Client_HighPacketLose = False
 							Else
@@ -1588,20 +1588,20 @@ Function UpdateServer()
 								dist# = Distance2(EntityX(Players(ttmp-1)\Pivot),EntityY(Players(ttmp-1)\Pivot),EntityZ(Players(ttmp-1)\Pivot))
 						
 								If Players(ttmp-1)\Act = ACT_FLASH And Players(ttmp-1)\VisibilityTimer > 0 And dist < 4.0 Then
-									If Players(ttmp-1)\VisibilityTimer = 30 Then PlaySound(HorrorSFX(Rand(0,2)))
+									If Players(ttmp-1)\VisibilityTimer = 30 Then PlaySound(HorrorSFX(Rand(0, 9)))
 									AmbientLight 255,255,255
 									If Players(ttmp-1)\VisibilityTimer = 1 Then UpdateLights()
 								EndIf
 								
 								If Players(ttmp-1)\Act = ACT_FLASH_2 And Players(ttmp-1)\VisibilityTimer > 0 And dist < 8.0 Then
-									If Players(ttmp-1)\VisibilityTimer = 60 Then PlaySound(HorrorSFX(Rand(0,2)))
+									If Players(ttmp-1)\VisibilityTimer = 60 Then PlaySound(HorrorSFX(Rand(0, 9)))
 									EntityFX GetChild(Players(ttmp-1)\Pivot,1),8
 									If Players(ttmp-1)\VisibilityTimer = 1 Then EntityFX GetChild(Players(ttmp-1)\Pivot,1),0
 								EndIf
 								
 								
 								If Players(ttmp-1)\Act = ACT_WALK And Players(ttmp-1)\VisibilityTimer > 0 And dist < 8.0 Then
-									If Players(ttmp-1)\VisibilityTimer = 300 Then PlaySound(HorrorSFX(1))
+									If Players(ttmp-1)\VisibilityTimer = 300 Then PlaySound(HorrorSFX(Rand(0, 9)))
 									AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 									If Players(ttmp-1)\VisibilityTimer = 1 Then UpdateLights()
 								EndIf
@@ -1610,13 +1610,13 @@ Function UpdateServer()
 									temptimer = Players(ttmp-1)\VisibilityTimer
 									
 									If temptimer  = 360 Or temptimer = 240 Or temptimer = 120 Then
-										If temptimer = 360 Then PlaySound(HorrorSFX(1))
+										If temptimer = 360 Then PlaySound(HorrorSFX(Rand(0, 9)))
 										CameraFogRange camera, 1, 5.4
 										AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 									EndIf
 									
 									If temptimer = 300 Or temptimer = 170 Or temptimer = 50 Then
-										If temptimer = 300 Then PlaySound(HorrorSFX(0))
+										If temptimer = 300 Then PlaySound(HorrorSFX(Rand(0, 9)))
 										CameraFogRange camera, 1, 10
 										AmbientLight 255,255,255
 									EndIf
@@ -1665,7 +1665,7 @@ Function UpdateServer()
 				
 				Local latestSpook% = ReadInt(Server)
 				If latestSpook>LastRecvSpook Then
-					DebugLog "AHHHH "+LastRecvSpook+" "+latestSpook
+					DebugLog "AHHHH " +LastRecvSpook+ " " +latestSpook
 					LastRecvSpook = latestSpook
 					SpookTimer = 40
 				EndIf
@@ -1742,7 +1742,7 @@ Function UpdateServer()
 						FreeEntity GetChild(Players(i)\Pivot,1)
 						FreeEntity Players(i)\Pivot
 						Delete Players(i)
-						Players(i)=Null
+						Players(i) = Null
 					EndIf
 				EndIf
 				PlayState = GAME_SOLO
@@ -1807,11 +1807,11 @@ Function UpdateServer()
 	EndIf
 	
 	If (Act = ACT_FLASH) And VisibilityTimer = 30 Then
-		PlaySound(HorrorSFX(Rand(0,2)))
+		PlaySound(HorrorSFX(Rand(0, 9)))
 	EndIf
 	
 	If (Act = ACT_FLASH_2) And VisibilityTimer = 60 Then
-		PlaySound(HorrorSFX(Rand(0,2)))
+		PlaySound(HorrorSFX(Rand(0, 9)))
 	EndIf
 	
 	If (Act = ACT_BEHIND) And VisibilityTimer = 300 Then
@@ -1819,18 +1819,18 @@ Function UpdateServer()
 	EndIf
 	
 	If Act = ACT_WALK And VisibilityTimer = 300 Then
-		PlaySound(HorrorSFX(1))
+		PlaySound(HorrorSFX(Rand(0, 9)))
 	EndIf
 	
 	If Act = ACT_RUN Then
 		If VisibilityTimer = 360 Or VisibilityTimer = 240 Or VisibilityTimer = 120 Then
-			If VisibilityTimer = 360 Then PlaySound(HorrorSFX(1))
+			If VisibilityTimer = 360 Then PlaySound(HorrorSFX(Rand(0, 9)))
 			CameraFogRange camera, 1, 3.8
 			AmbientLight Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10),Max(BRIGHTNESS-50,10)
 		EndIf
 		
 		If VisibilityTimer = 300 Or VisibilityTimer = 170 Or VisibilityTimer = 50 Then
-			If VisibilityTimer = 300 Then PlaySound(HorrorSFX(0))
+			If VisibilityTimer = 300 Then PlaySound(HorrorSFX(Rand(0, 9)))
 			CameraFogRange camera, 1, 15
 			AmbientLight Brightness,Brightness,Brightness
 		EndIf
@@ -1917,9 +1917,9 @@ Function UpdateServer()
 							While vYaw>=180.0
 								vYawa=vYawa-360.0
 							Wend
-							;DebugLog "ANGLE "+Abs(vYawa)
+							;DebugLog "ANGLE " +Abs(vYawa)
 							If EntityInView(GetChild(Players(i)\Pivot,1),camera) And EntityDistance(Players(i)\Pivot,collider)<0.8 And Abs(vYawa)<45 Then
-								If Players(i)\KillTimer<=0 Then AddChatMsg(PlayerName+" killed "+Players(i)\Name+"!",255,100,0,i,True)
+								If Players(i)\KillTimer<=0 Then AddChatMsg(PlayerName+ " killed " +Players(i)\Name+ "!",255,100,0,i,True)
 								Players(i)\KillTimer = max(Players(i)\KillTimer,1)
 							EndIf
 						EndIf
@@ -2045,7 +2045,7 @@ End Function
 Function AddChatMsg(txt$,r%,g%,b%,player%=-1,glbal%=False,time%=15000)
 	MsgCount=MsgCount+1
 	If Len(txt)>200 Then
-		txt = Left(txt,188)+"- [REDACTED]"
+		txt = Left(txt,188)+ "- [REDACTED]"
 	EndIf
 	Local cm.ChatMessage
 	Local cmCount% = 0
@@ -2104,7 +2104,7 @@ Function UpdateChatMsgs()
 			If PlayState=GAME_SERVER Then
 				Local txt$ = cm\Txt
 				If AdminSpyChat Then
-					txt="("+cm\Sender+") "+txt
+					txt="(" +cm\Sender+ ") " +txt
 				EndIf
 				Color 0,0,0
 				Text 6,GraphicsHeight()-(20*(msgAmount-1))+y+1,txt
