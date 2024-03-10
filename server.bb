@@ -311,7 +311,7 @@ Function LoadMap()
 	labeltexture = LoadTexture("GFX\map\label.jpg")
 	EntityTexture(label, labeltexture)
 		
-	SetFont font 
+	SetFont signfont
 	
 	Firstfloor = 0
 
@@ -396,7 +396,7 @@ Function LoadMap()
 		floortimer(i) = 0
 	Next
 
-	SetFont font1
+	SetFont signfont
 
 	SetBuffer BackBuffer() 	
 	

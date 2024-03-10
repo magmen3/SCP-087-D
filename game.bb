@@ -7,7 +7,7 @@
 
 Graphics3D 640, 480, 32, 2
 
-Global GAME_VERSION$ = "v0.3"
+Global GAME_VERSION$ = "v0.35"
 
 AppTitle "SCP 087-D " + GAME_VERSION
 
@@ -17,13 +17,6 @@ ChosenButton(0) = 0
 ChosenButton(1) = 0
 ChosenButton(2) = 0
 ChosenButton(3) = 0
-
-; blitzcord stuff (i hope that works)
-BlitzcordSetSmallImage("icon.png")
-BlitzcordSetLargeImage("GFX/scplogo.png")
-BlitzcordSetActivityType("Game")
-BlitzcordSetActivityState("Playing")
-BlitzcordSetSmallText("SCP-087-D " + GAME_VERSION)
 
 Global MapString$
 MapString = ""
@@ -39,7 +32,7 @@ Global MenuFont1%,MenuFont2%
 Global MouseHit1%,MouseHit2%
 ;Global PointerImg%
 Global launchertex%
-Global BRIGHTNESS_MAX% = 220
+Global BRIGHTNESS_MAX% = 140 ; 200
 Global DO_ANIMATION% = True
 ;PointerImg = LoadImage("GFX\cursor.PNG")
 ;MaskImage PointerImg,0,0,0
@@ -1335,7 +1328,6 @@ While QUIT
 	SetFont MenuFont2
 	If AFKMode = False Then UpdateChatMsgs()
 
-
 	If PlayState <> GAME_SOLO Then
 		If KeyHit(28) Then
 			If ChatOpened Then
@@ -2251,7 +2243,7 @@ End Function
 
 Function CreateMap(floors)
 	;The First Area rooms
-	map0 = LoadMesh("GFX\map0.x")   ; First room. The player must proceed to the 6xt floor to begin
+	map0 = LoadMesh("GFX\map0.x") 	;GFX\map0.b3d   ; First room. The player must proceed to the 6xt floor to begin
 	map = LoadMesh("GFX\map.x")     ; Default staircase hallway. You will cross through many of these; 087-B-1 may appear at those
 	map1 = LoadMesh("GFX\map1.x")   ; Room with an window where 087-B-2 may appear
 	map2 = LoadMesh("GFX\map2.x")   ; Room where 087-B-2 may appear
@@ -2591,7 +2583,7 @@ Function CreateMap(floors)
 		ElseIf i < 7 And FloorTestMode = False Then
 			CreateFloor(map,i) : MapString = MapString+ "99"
 		Else
-			Select FloorActions(i+1)
+			Select FloorActions(i + 1)
 				Case ACT_LIGHT
 					If Rand(0,2)=0 Then
 						CreateFloor(map2,i) : MapString = MapString+ "02"
@@ -2733,7 +2725,7 @@ Function CreateMap(floors)
 			If i = 140 Then
 				CreateFloor(map0_a2,i)
 			Else
-				Select FloorActions(i+1)
+				Select FloorActions(i + 1)
 				
 				Case ACT_ILLUSIONS
 					CreateFloor(map3_a2,i)
@@ -2775,7 +2767,7 @@ Function CreateMap(floors)
 		CreateFloor(map_endingScene,200)
 	EndIf
 
-	SetFont font1
+	SetFont signfont
 
 	SetBuffer BackBuffer() 	
 	
@@ -2863,10 +2855,10 @@ Function DrawFloorMarkers()
 				Case 13
 					number = "DO T LO K  T ME"
 				Default
-					number = (i+1)
+					number = (i + 1)
 			End Select
 		Else
-			number = (i+1)
+			number = (i + 1)
 		EndIf
 		
 		If i > 80 And Rand(3) = 1 Then
@@ -3405,7 +3397,7 @@ Function UpdateFloors()
 						
 						dist# = Distance2(EntityX(EnemyRedmist\collider),EntityY(EnemyRedmist\collider),EntityZ(EnemyRedmist\collider))
 						
-						If dist<13 And PlayerFloor < i+1 Then
+						If dist < 13 And PlayerFloor < (i + 1) Then
 							If Not ChannelPlaying(SoundChannel) Then SoundChannel = EmitSound(DontLookSFX, EnemyRedmist\collider)
 							If Not ChannelPlaying(SoundChannelReverb) Then SoundChannelReverb = EmitSound(DontlookSFXReverb, EnemyRedmist\obj)
 							ChannelVolume(SoundChannel, max(0.0,25.0/(dist*dist)))
@@ -3451,7 +3443,7 @@ Function UpdateFloors()
 						
 						dist# = Distance2(EntityX(EnemyRedmist\collider),EntityY(EnemyRedmist\collider),EntityZ(EnemyRedmist\collider))
 						
-						If dist<13 And PlayerFloor < i+1 Then
+						If dist<13 And PlayerFloor < i + 1 Then
 							If Not ChannelPlaying(SoundChannel) Then SoundChannel = EmitSound(DontlookSFX, EnemyRedmist\collider)
 							If Not ChannelPlaying(SoundChannelReverb) Then SoundChannelReverb = EmitSound(DontlookSFXReverb, EnemyRedmist\obj)
 							ChannelVolume(SoundChannel, max(0.0,25.0/(dist*dist)))
@@ -3627,6 +3619,12 @@ Function UpdateFloors()
 				Case ACT_TRANSITION
 					If FloorTimer(i) > 0 Then
 						If Distance2(4,FloorY,-10) < 2.0 And FloorTimer(i) = 1 Then
+							Radio = LoadMesh("GFX\map\radio.x")
+							SoundChannel = EmitSound(radioMusic,Radio)
+							ScaleEntity(Radio, 1,1,1)
+							PositionEntity Radio,-1.15,FloorY-0.5,-18.8
+							EntityType Radio, hit_map
+							RotateEntity(Radio,0,60,0)
 							DO_ANIMATION = False
 							FloorTimer(i) = FloorTimer(i) + 1
 							PlaySound(RoarSFX)
@@ -4045,7 +4043,7 @@ Function UpdateFloors()
 							
 							Color 255,255,255
 							CameraFogColor(camera,255,255,255)
-							SetFont font
+							SetFont signfont
 							For j = 0 To 30
 								Cls
 								UpdateWorld
@@ -4553,6 +4551,12 @@ Function UpdateFloors()
 				EndIf
 			Case ACT_UNKNOWN
 				If FloorTimer(PlayerFloor) = 1 Then
+						Radio = LoadMesh("GFX\map\radio.x")
+						SoundChannel = EmitSound(radioMusic,Radio)
+						ScaleEntity(Radio, 1,1,1)
+						PositionEntity Radio,-1.15,FloorY-0.5,-18.8
+						EntityType Radio, hit_map
+						RotateEntity(Radio,0,60,0)
 					If Distance2(5, FloorY, -13) < 1.0 Then
 						FloorTimer(PlayerFloor) = 2
 						CurrEnemy = CreateEnemy(-0.5, FloorY-0.5, -11.5,UnknownTextures(Rand(0, 2)))
@@ -4599,6 +4603,12 @@ Function UpdateFloors()
 				If FloorTimer( PlayerFloor)= 1 Then
 					FloorTimer(PlayerFloor)= 2
 				ElseIf FloorTimer(PlayerFloor)< 3000
+						Radio = LoadMesh("GFX\map\radio.x")
+						SoundChannel = EmitSound(radioMusic,Radio)
+						ScaleEntity(Radio, 1,1,1)
+						PositionEntity Radio,-1.15,FloorY-0.5,-18.8
+						EntityType Radio, hit_map
+						RotateEntity(Radio,0,60,0)
 					If Distance2(EndX, FloorY, FloorZ)<7 Then 
 						PositionEntity SoundEmitter,FloorX+(FloorX-EndX)*1.1,FloorY,FloorZ
 						FloorTimer(PlayerFloor) = FloorTimer(PlayerFloor)+1
