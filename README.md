@@ -2,6 +2,8 @@
 
 Modification of SCP-087-B, based on SCP-087-B Extended Edition.
 
+ModDB Link: https://www.moddb.com/mods/scp-087-d
+
 ### Full credits:
 * SCP Containment Breach 087-B Mod: some monster textures
 * SCP - Security Stories: launcher button sounds, footstep sounds
